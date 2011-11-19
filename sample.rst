@@ -1,20 +1,20 @@
-===========================================================
-LibreOffice+JODConverter���g���āAreST����PDF������Ă݂�B
+﻿===========================================================
+LibreOffice+JODConverterを使って、reSTからPDFを作ってみる。
 ===========================================================
 
    ..
-      �R�����g�s�A���f����邩�ȁH
+      コメント行、反映されるかな？
 
-LibreOffie�o�R��PDF���邻���Ȃ̂ō���Ă݂܂����B
+LibreOffie経由でPDF作れるそうなので作ってみました。
 
-�قƂ�ǐ�l�̒m�b�������΂���q�؂����㕨�Ȃ�ł����B
+ほとんど先人の知恵を少しばかり拝借した代物なんですが。
 
-�Ȃ��AWindows�ō�Ƃ��s���܂����B
+なお、Windowsで作業を行いました。
 
-�K�v�Ȃ���
+必要なもの
 ==========
 
-�Ƃ肠�����K���Ƀ_�E�����[�h���Ă����Ă��������B
+とりあえず適当にダウンロードしておいてください。
 
    * java
    * LibreOffice
@@ -23,85 +23,85 @@ LibreOffie�o�R��PDF���邻���Ȃ̂ō���Ă݂܂����B
    * docutils
 
 
-�C���X�g�[��
+インストール
 ============
 
 java
 ----
 
-�C���X�g�[���[�����s���āA�C���X�g�[�����s���܂��B
+インストーラーを実行して、インストールを行います。
 
-���ϐ���ݒ肵�܂��B�C���X�g�[�����ꂽjava�ɍ��킹�Ă��������B
-(�܂��A�����܂�ł�����)
+環境変数を設定します。インストールされたjavaに合わせてください。
+(まあ、お決まりですけど)
 
    * JAVA_HOME
 
 Python
 -------
 
-���g�̊��ł�Python 2.6.6�����ɃC���X�g�[������Ă��܂��̂ŁA
-������g���Ă��܂��B����2.7�ł������Ǝv���܂�����ǂ��B
+自身の環境ではPython 2.6.6が既にインストールされていますので、
+それを使っています。多分2.7でもいいと思いますけれども。
 
-�K�v�Ȃ�C���X�g�[���[�����s���āA�C���X�g�[�����s���܂��B
+必要ならインストーラーを実行して、インストールを行います。
 
-   ���g�̊��ł́A�C���X�g�[���p�X�� C:\\Python26 �ł����B
+   自身の環境では、インストールパスは C:\\Python26 でした。
 
-���̎��_�ł��łɁA�p�X��"C:\\Python26;C:\\Python26\\Scripts"��
-�ǉ�����Ă���͂��ł���?
+この時点ですでに、パスに"C:\\Python26;C:\\Python26\\Scripts"が
+追加されているはずですね?
 
 Docutils
 --------
 
-PyPi( http://pypi.python.org/pypi ,�ǂ�:�ς��ҁ[����)����
+PyPi( http://pypi.python.org/pypi ,読み:ぱいぴーあい)から
 
    Docutils
 
-���_�E�����[�h���A�Z�b�g�A�b�v���܂��B
+をダウンロードし、セットアップします。
 
 
 LibreOffice
 --------------
 
-������C���X�g�[���[�̎w���ɏ]���ăC���X�g�[�����܂��B
+これもインストーラーの指示に従ってインストールします。
 
-�C���X�g�[����̃f�B���N�g�����m�F���Ă����Ă��������B
+インストール先のディレクトリを確認しておいてください。
 
    "C:\Program Files\LibreOffice 3"
 
-�C���X�g�[����̏���
+インストール後の準備
 ====================
 
-��L���؂�Ȃ��_�E�����[�h�A�Z�b�g�A�b�v����Ă��邱�Ƃ�
-�m�F�o������A�ȉ����s���܂��B
+上記が滞りなくダウンロード、セットアップされていることを
+確認出来たら、以下を行います。
 
-   * styles.odt �̃R�s�[
-   * �o�b�`�t�@�C���̍쐬(rst2odt.bat)
-   * styles.odt �̕ҏW
+   * styles.odt のコピー
+   * バッチファイルの作成(rst2odt.bat)
+   * styles.odt の編集
 
-�{���͂����ƌ������o�͗p�̐ݒ���s��Ȃ��Ƃ����Ȃ���ł��傤
-����ǂ��A�y�[�W�ݒ��A4�ɂ������̂��ȒP�ɗp�ӂ��Ă����܂��B
+本来はもっと厳密無出力用の設定を行わないといけないんでしょう
+けれども、ページ設定をA4にしたものを簡単に用意しておきます。
 
-styles.odt �̃R�s�[
+styles.odt のコピー
 -------------------
 
-�܂���styles.odt���R�s�[���Ă��܂��傤�B�����̊��ł́A�ȉ�
-�ɂ���܂����B
+まずはstyles.odtをコピーしてきましょう。自分の環境では、以下
+にありました。
 
    C:\\Python26\\Lib\\site-packages\\docutils-0.6-py2.6.egg\\docutils\\writers\odf_odt\\styles.odt
 
 
-�o�b�`�t�@�C���̍쐬(rst2odt.bat)
+バッチファイルの作成(rst2odt.bat)
 ---------------------------------
 
-�o�b�`�t�@�C����3�쐬���܂��B���������^�C�v����̂��ʓ|�Ȃ̂ŁB
+バッチファイルを3つ作成します。いちいちタイプするのが面倒なので。
 
-�Ȃ��A�L�q�̍ۂɂ̓t�@�C���p�X�A�t�@�C�����Ƃ������̊��ɍ��킹��
-�K�X�ύX���Ă���������΂����Ǝv���܂��B
+なお、記述の際にはファイルパス、ファイル名とも自分の環境に合わせて
+適宜変更していただければいいと思います。
 
 start.bat
 ~~~~~~~~~
 
-LibreOffice���u�҂��󂯁v��Ԃɂ��Ă����܂��B�����JODconverter����t�@�C���ϊ��̖��߂��o���킯�ł��B
+LibreOfficeを「待ち受け」状態にしておきます。これにJODconverterからファイル変換の命令を出すわけです。
 
 ::
 
@@ -112,61 +112,61 @@ LibreOffice���u�҂��󂯁v��Ԃɂ��Ă����܂��B�����JODconverter����t�@�C���ϊ��
 rst2odt.bat
 ~~~~~~~~~~~~
 
-�X�^�C���V�[�g�I�v�V������"styles.odt"���w�肵�����̂��쐬���Ă����܂��B
+スタイルシートオプションに"styles.odt"を指定したものを作成しておきます。
 
    c:\python26\python.exe C:\Python26\Scripts\rst2odt.py --stylesheet=styles.odt sample.rst sample.odt
 
 odt2pdf.bat
 ~~~~~~~~~~~~
 
-JODconverter�����s���邽�߂̃o�b�`�t�@�C���ł��B start.bat�����s���Ă���A��������s���܂��B
+JODconverterを実行するためのバッチファイルです。 start.batを実行してから、これを実行します。
 
 ::
 
    java -jar C:\usr\w32bin\jodconverter-2.2.2\lib\jodconverter-cli-2.2.2.jar sample.odt sample.pdf
 
 
-styles.odt �̕ҏW
+styles.odt の編集
 -----------------
 
-�R�s�[���� styles.odt �̃y�[�W�ݒ�ƃt�H���g�ݒ��ύX���܂��B
+コピーした styles.odt のページ設定とフォント設定を変更します。
 
-   1. ���j���[���� ���� > �y�[�W ��I�����܂��B
-   2. [�y�[�W]�^�u���N���b�N���A�p���̏�����"A4"�ɁA�]���𒲐����܂��B
-   3. [OK]�{�^���������܂��B
-   4. ���j���[���� �c�[�� > �I�v�V���� ��I�т܂��B
-   5. �c���[����A LibreOffice Writer > ����̃t�H���g(����������)
-      �� �I�����܂��B
-   6. ���݂̃h�L�������g�̂� �Ƀ`�F�b�N�����܂��B
-   7. ��ʉE����[�W��]�{�^���������܂��B�����OS�Ŏg����t�H���g��
-      �ݒ肳��܂��B
-   8. ����̃t�H���g(�A�W�A������) �����l�ɐݒ肵�܂��B�����͂���
-      �Ŏg�p�t�H���g�� ���C���I �ɐݒ肵�܂����B
-   9. �t�@�C����ۑ����܂��B
+   1. メニューから 書式 > ページ を選択します。
+   2. [ページ]タブをクリックし、用紙の書式を"A4"に、余白を調整します。
+   3. [OK]ボタンを押します。
+   4. メニューから ツール > オプション を選びます。
+   5. ツリーから、 LibreOffice Writer > 既定のフォント(西欧諸言語)
+      を 選択します。
+   6. 現在のドキュメントのみ にチェックを入れます。
+   7. 画面右下の[標準]ボタンを押します。これでOSで使えるフォントが
+      設定されます。
+   8. 既定のフォント(アジア諸言語) も同様に設定します。自分はここ
+      で使用フォントを メイリオ に設定しました。
+   9. ファイルを保存します。
 
-���ꂪ�A�������K�肷��t�@�C���ł��B���ɂ����o���A�ȂǏ����̐ݒ�
-�����Ȃ��Ă͂Ȃ�Ȃ��̂ł����A�����ł͔�΂��܂��B
+これが、書式を規定するファイルです。他にも見出し、など書式の設定
+をしなくてはならないのですが、ここでは飛ばします。
 
-�������I������
+それらを終えたら
 
-   * rst�t�@�C���̗p��(sample.rst)
-   * rst2odt.bat �̎��s
-   * start.bat �̎��s
-   * odt2pdf.bat  �̎��s
+   * rstファイルの用意(sample.rst)
+   * rst2odt.bat の実行
+   * start.bat の実行
+   * odt2pdf.bat  の実行
 
-���ӓ_
+注意点
 ======
 
-start.bat �� LibreOffice��҂��󂯏�Ԃɂ��Ă��܂����A�ϊ���
-�I�������A�^�X�N�}�l�[�W������"soffice.exe"���I��������K�v��
-����܂��B
+start.bat で LibreOfficeを待ち受け状態にしていますが、変換が
+終わったら、タスクマネージャから"soffice.exe"を終了させる必要が
+あります。
 
-�����̊��́c
+自分の環境は…
 ==============
 
-����g�p�������ł�JODConverter��ǉ��Ŕz�u�����̂ŁA
-���ׂčŐV�o�[�W�����Ƃ����킯�ł͂���܂���BJODConverter���̂�
-�ŐV��3.0-beta�ł͂Ȃ��ł����ˁB
+今回使用した環境ではJODConverterを追加で配置したので、
+すべて最新バージョンというわけではありません。JODConverter自体も
+最新の3.0-betaではないですしね。
 
    * Python 2.6.6
    * docutils 0.6
