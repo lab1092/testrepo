@@ -1,0 +1,600 @@
+/* @charset "UTF-8";*/
+/* default */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,p,blockquote,th,td{margin:0;padding:0;}
+table{border-collapse:collapse;border-spacing:0;}
+fieldset,img{border:0;}
+address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}
+ol,ul {list-style:none;}
+caption{text-align:left;}
+q:before,q:after{content:'';}
+/*----------------------------------------------------------------------
+   Default Font
+----------------------------------------------------------------------*/
+body {
+    font: 13px arial,helvetica,clean,sans-serif;
+    font-size:small;
+    font:x-small;
+    background-color: #E0F0F5;
+    font-family:'ヒラギノ角ゴ Pro W3','Hiragino Kaku Gothic Pro','メイリオ',Meiryo,'ＭＳ Ｐゴシック',sans-serif;
+}
+a:hover {
+    color: #914141;
+}
+a:active {
+    color: #914141;
+}
+
+/*---------------------------------------------------------------------
+   Content Header
+----------------------------------------------------------------------*/
+h1 {
+    padding: 0.3em 1em 0.3em 21px;
+    font-size: 167%;
+    letter-spacing: 0.2em;
+    color: #9A4414;
+}
+h2 {
+    padding: 0.3em 0;
+    border-bottom: solid 1px #CCCCCA;
+    color: #990033;
+    /* font-size: 122%; */
+    letter-spacing: 0.2em;
+}
+h3 {
+    padding: 0.6em 0 0.4em 0;
+    letter-spacing: 0.1em;
+}
+h4 {
+    padding: 0.5em 0 0.2em 0;
+    letter-spacing: 0.1em;
+}
+h5,h6 {
+    padding: 0.4em 0 0.2em 0;
+}
+
+/*---------------------------------------------------------------------
+   Input Form 
+----------------------------------------------------------------------*/
+input {
+    margin-top: 0.5em;
+}
+input#TEXT {
+    border: solid 1px #BBBBBB;
+}
+input#BUTTON {
+    padding: 1px 0.5em;
+    border: double 3px #BBBBBB;
+    background: #EDEDEA;
+}
+textarea {
+    margin-top: 0.5em;
+    border: solid 1px #BBBBBB;
+}
+select {
+    margin-top: 0.5em;
+    border: solid 1px #BBBBBB;
+}
+b { font-weight: bold; } /* bold */
+i { font-style: italic; } /* italic */
+big { font-size: 107%; } /* big size */
+small { font-size: 85%; } /* small size */
+tt { font-family: monospace; } /* monospace */
+/*---------------------------------------------------------------------
+   quotation
+----------------------------------------------------------------------*/
+blockquote {
+    padding-left: 0.8em;
+    margin: 1em;
+    border-left: 2px dashed #EAEAED;
+}
+cite,q {
+    text-decoration: underline;
+}
+
+/* 整形済みテキスト */
+pre {
+    padding: 0.3em;
+    border: solid 1px #DADADC;
+    font-size: 92%;
+    font-family: monospace;
+}
+/*---------------------------------------------------------------------
+   Header Logo, Background , Container size
+----------------------------------------------------------------------*/
+body{ 
+    background-color: #DAEBFB;
+    background-image: url("images/bg.jpg");
+    background-repeat: repeat-x;
+    background-position:center top;
+} 
+
+div#container {
+    width: 972px;
+    padding: 0px 0px 0px;
+    margin: 0 auto;
+    background-image: url("images/toplogo_tp.png");
+    background-repeat: no-repeat;
+    background-position: 5px 5px;
+}
+/*---------------------------------------------------------------------
+   Layout I : Header , Footer
+----------------------------------------------------------------------*/
+#header {
+    height: 66px;
+    padding : 0px;
+    text-align:right;
+}
+
+#footer {  
+    height: 36px;
+    padding : 0px;
+    text-align:right;
+}
+/*---------------------------------------------------------------------
+   Layout II : Left Side bar
+----------------------------------------------------------------------*/
+/* Navigation Menu */
+#subnavi div {
+    width: 210px;
+    float: left;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    top: 80px;
+    left: -10px;
+        margin: 0.5em 6px;
+    border: 1px solid rgb(200, 200, 200);
+    background: none repeat scroll 0% 0% #FFFFFF;
+    color: rgb(0, 0, 0);
+    border-radius: 0px 7px 7px 0px;
+
+    text-decoration: none;
+}  
+
+/* Navigation Menu Title*/
+#subnavi div h2{
+    width: 200px;
+    padding: 0.2em 5px;
+    border: none;
+    font-size: 110%;
+    letter-spacing: 0.2em;
+    background: none repeat scroll 0% 0% #444488;
+    border-radius: 0px 6px 0px 0px;
+    color: #FFFFFF;
+}
+
+#subnavi ul{
+    width: 200px;
+    margin: 0px 0px 0px 0px;
+
+}
+
+#subnavi li{
+    margin-bottom: 1px;
+    padding-top: 0.1em;
+}
+
+#subnavi li a{
+    display: block;
+    width: 199px;
+    padding: 0.4em 5px 0.4em 5px;
+    border-bottom: dotted 2px #DCDCDA;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 110%;
+}
+
+
+#subnavi li span{
+    display: block;
+    width: 199px;
+    padding: 0.4em 5px 0.4em 5px;
+    border-bottom: dotted 2px #DCDCDA;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 110%;
+}
+
+#subnavi li a:hover,#subnavi li a:active{
+    border-bottom: solid 2px #BA8474;
+    text-decoration: none;
+}
+
+#subnavi ul li ul{
+    width: 100px;
+    margin: 0px 0px 0px 0px;
+}
+
+#subnavi li ul li {
+    margin: 0px 0px 0px 10px;
+    padding: 0.2em 0px 0.2em 0px;
+    font-size: 100%;
+}
+
+#subnavi ul li ul li a{
+    display: block;
+    width: 180px;
+}
+
+/*---------------------------------------------------------------------
+   Layout III : Main Articles
+----------------------------------------------------------------------*/
+
+#main {
+    margin: 0.5em 6px;
+    border: 2px solid rgb(255, 255, 255);
+    background: none repeat scroll 0% 0% rgb(255, 255,255);
+    color: rgb(0, 0, 0);
+    border-radius: 7px 7px 7px 7px;
+    padding: 13px 20px;
+
+    text-decoration: none;
+}
+
+/*---------------------------------------------------------------------
+   Layout IV : Panels
+----------------------------------------------------------------------*/
+.inputpanel {
+    margin: 0.5em 6px;
+    border: 1px solid rgb(200, 200, 200);
+    background: none repeat scroll 0% 0% #E4E8FF;
+    color: rgb(0, 0, 0);
+    border-radius: 7px 7px 7px 7px;
+    padding: 13px 13px;
+    text-decoration: none;
+}
+
+/* 入力パネル内レイアウト用テーブル*/
+.inputpanel td {
+    border: 0px none;
+    margin 20px;
+}
+
+/* エラーパネル(アイコンつき)*/
+.errorpanel {
+    margin: 0.5em 6px;
+    border: 1px solid rgb(200, 200, 200);
+    background-color: #FFF0F0;
+    background-image: url("images/dialog-error.png");
+    background-repeat: no-repeat;
+    background-position: 15px center ;
+    color: rgb(0, 0, 0);
+    border-radius: 7px 7px 7px 7px;
+    padding: 13px 20px 13px 60px ;
+    text-decoration: none;
+}
+
+/* 警告パネル(アイコンつき)*/
+.warningpanel {
+    margin: 0.5em 6px;
+    border: 1px solid rgb(200, 200, 200);
+    background-color: #FFFEC5;
+    background-image: url("images/dialog-warning.png");
+    background-repeat: no-repeat;
+    background-position: 15px center ;
+    color: rgb(0, 0, 0);
+    border-radius: 7px 7px 7px 7px;
+    padding: 13px 20px 13px 60px ;
+    text-decoration: none;
+}
+
+/* 成功パネル(アイコンあり)*/
+.succeedpanel {
+    margin: 0.5em 6px;
+    border: 1px solid rgb(200, 220, 200);
+    background-color: #F0FFF0;
+    background-image: url("images/dialog-success.png");
+    background-repeat: no-repeat;
+    background-position: 15px center ;
+    color: rgb(0, 0, 0);
+    border-radius: 7px 7px 7px 7px;
+    padding: 13px 20px 13px 60px ;
+    text-decoration: none;
+}
+
+/* 情報パネル(アイコンあり)*/
+.iinfopanel {
+    margin: 0.5em 6px;
+    border: 1px solid rgb(200, 200, 200);
+    background-color: #F0F0F0;
+    background-image: url("images/dialog-information.png");
+    background-repeat: no-repeat;
+    background-position: 15px center ;
+    color: rgb(0, 0, 0);
+    border-radius: 7px 7px 7px 7px;
+    padding: 13px 20px 13px 60px ;
+    text-decoration: none;
+}
+
+/* 情報パネル(アイコンなし)*/
+.infopanel {
+    margin: 0.5em 6px;
+    border: 1px solid rgb(200, 200, 200);
+    background-repeat: no-repeat;
+    background-color: #F0F0F0;
+    color: rgb(0, 0, 0);
+    border-radius: 7px 7px 7px 7px;
+    padding: 13px 20px 13px 20px ;
+    text-decoration: none;
+}
+
+/*---------------------------------------------------------------------
+   Text Decoration(Emphasis,etc...)
+----------------------------------------------------------------------*/
+em {
+    font-weight: bold;
+}
+strong{
+    font-weight: bold;
+    color: #814121;
+}
+ins {
+    text-decoration: underline;
+}
+del {
+    text-decoration: line-through;
+}
+
+/* 警告(赤) */
+/* 必須(太字) */
+
+span.required  {
+    color:black;
+    font-weight: bold;
+    text-align:right;
+    }
+
+.requiered {font-style:bold;}
+.warnred {color: red;}
+.successgreen {color: green;}
+
+/* 非表示 */
+span.hidden {
+    visibility:hidden;
+    }
+
+/* リンクボタン:ログアウト */
+a.logoff {
+    padding-right:1em;
+    padding-left:30px;
+    padding-top:0.3em;
+    padding-bottom:0.3em;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -opera-border-radius: 5px;
+    background-repeat: no-repeat;
+    background-position: 7px center ;
+    background-image: url("images/system-log-out.png");
+}
+a.logoff:hover {
+    padding-right:1em;
+    padding-left:30px;
+    padding-top:0.3em;
+    padding-bottom:0.3em;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -opera-border-radius: 5px;
+    background-repeat: no-repeat;
+    background-position: 7px center ;
+    background-image: url("images/exit.png");
+}
+
+/* リンクボタン:コンピューター */
+a.computer {
+    padding-right:1em;
+    padding-left:30px;
+    padding-top:0.3em;
+    padding-bottom:0.3em;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -opera-border-radius: 5px;
+    background-repeat: no-repeat;
+    background-position: 7px center ;
+    background-image: url("images/computer.png");
+}
+
+a.computer:hover {
+    padding-right:1em;
+    padding-left:30px;
+    padding-top:0.3em;
+    padding-bottom:0.3em;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -opera-border-radius: 5px;
+    background-repeat: no-repeat;
+    background-position: 7px center ;
+    background-image: url("images/computer.png");
+}
+
+/* リンクボタン:プリンター */
+a.printer {
+    padding-right:1em;
+    padding-left:30px;
+    padding-top:0.3em;
+    padding-bottom:0.3em;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -opera-border-radius: 5px;
+    background-repeat: no-repeat;
+    background-position: 7px center ;
+    background-image: url("images/printer.png");
+}
+
+a.printer:hover {
+    padding-right:1em;
+    padding-left:30px;
+    padding-top:0.3em;
+    padding-bottom:0.3em;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -opera-border-radius: 5px;
+    background-repeat: no-repeat;
+    background-position: 7px center ;
+    background-image: url("images/printer.png");
+}
+
+/* リンクボタン:無線機器 */
+a.wireless {
+    padding-right:1em;
+    padding-left:30px;
+    padding-top:0.3em;
+    padding-bottom:0.3em;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -opera-border-radius: 5px;
+    background-repeat: no-repeat;
+    background-position: 7px center ;
+    background-image: url("images/network-wireless.png");
+}
+
+a.wireless:hover {
+    padding-right:1em;
+    padding-left:30px;
+    padding-top:0.3em;
+    padding-bottom:0.3em;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -opera-border-radius: 5px;
+    background-repeat: no-repeat;
+    background-position: 7px center ;
+    background-image: url("images/network-wireless.png");
+}
+
+/* リンクボタン:ヘルプ */
+a.help {
+    padding-right:1em;
+    padding-left:30px;
+    padding-top:0.3em;
+    padding-bottom:0.3em;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -opera-border-radius: 5px;
+    background-repeat: no-repeat;
+    background-position: 7px center ;
+    background-image: url("images/help-browser.png");
+}
+
+a.help:hover {
+    padding-right:1em;
+    padding-left:30px;
+    padding-top:0.3em;
+    padding-bottom:0.3em;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -opera-border-radius: 5px;
+    background-repeat: no-repeat;
+    background-position: 7px center ;
+    background-image: url("images/help-browser.png");
+}
+
+/* リンクボタン:スプレッドシート */
+a.spreadsheet {
+    padding-right:1em;
+    padding-left:30px;
+    padding-top:0.3em;
+    padding-bottom:0.3em;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -opera-border-radius: 5px;
+    background-repeat: no-repeat;
+    background-position: 7px center ;
+    background-image: url("images/x-office-spreadsheet.png");
+}
+a.spreadsheet:hover {
+    padding-right:1em;
+    padding-left:30px;
+    padding-top:0.3em;
+    padding-bottom:0.3em;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -opera-border-radius: 5px;
+    background-repeat: no-repeat;
+    background-position: 7px center ;
+    background-image: url("images/x-office-spreadsheet.png");
+}
+
+/* リンクボタン:ユーザー */
+a.users {
+    padding-right:1em;
+    padding-left:30px;
+    padding-top:0.3em;
+    padding-bottom:0.3em;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -opera-border-radius: 5px;
+    background-repeat: no-repeat;
+    background-position: 7px center ;
+    background-image: url("images/system-users.png");
+}
+a.users:hover {
+    padding-right:1em;
+    padding-left:30px;
+    padding-top:0.3em;
+    padding-bottom:0.3em;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -opera-border-radius: 5px;
+    background-repeat: no-repeat;
+    background-position: 7px center ;
+    background-image: url("images/system-users.png");
+}
+/*---------------------------------------------------------------------
+   Form Fields
+----------------------------------------------------------------------*/
+input[type="text"]{
+    margin-right:0.5em;
+    margin-left:0.5em;
+}
+input[type="password"]{
+    margin-right:0.5em;
+    margin-left:0.5em;
+}
+input[type="checkbox"]{
+    margin-right:0.5em;
+    margin-left:0.5em;
+}
+input[type="radio"]{
+    margin-right:0.5em;
+    margin-left:0.5em;
+}
+select{
+    margin-right:0.5em;
+    margin-left:0.5em;
+}
+textarea{
+    margin-right:0.5em;
+    margin-left:0.5em;
+}
+
+/*---------------------------------------------------------------------
+   Misc
+----------------------------------------------------------------------*/
+.accordion_head {cursor:pointer;}
+
+span.dottedbox{
+    background-color: rgb(220, 220, 220);
+    padding:2px;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -opera-border-radius: 2px;
+    border: 2px dotted rgb(128, 128, 128);
+}
+
+
+.borderred{ border:1px solid red; }
+.bordergray{ border:1px solid #555555; }

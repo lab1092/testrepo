@@ -1,0 +1,281 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+    <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="lib/jquery.ui.core.css" />
+    <link rel="stylesheet" type="text/css" href="lib/jquery.ui.theme.css" />
+    <link rel="stylesheet" type="text/css" href="lib/jquery.ui.datepicker.css" />
+    <link rel="stylesheet" type="text/css" href="lib/extra.css" />
+    <script src="lib/jquery-1.8.2.js"></script>
+    <script src="bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" src="lib/jquery.ui.core.js"></script>
+    <script type="text/javascript" src="lib/jquery.ui.datepicker.js"></script>
+    <script type="text/javascript" src="lib/jquery.ui.datepicker-ja.js"></script>
+
+<title>
+ページサンプル
+</title>
+
+<script type="text/javascript" charset="utf-8"> 
+$(function($){
+    $("#txtDate").datepicker({dateFormat: "yy/mm/dd"});
+    
+    $("#aaa").click(function() {
+      $('window,body,html').animate({
+        scrollTop: 0
+      }, 800);
+      return false;
+    });
+
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.accordion_header').click(function() {
+        $(this).next().slideToggle();
+    }).next().hide();
+    
+    window.scrollBy(0, document.cookie);
+});
+</script>
+
+
+
+
+
+</head>
+<body onload="">
+<form action="showcase.html" method="POST" name="form1">
+<div id="container">
+  <div id="header">
+    <br>
+    <a href="index.html" class="btn ">ホームに戻る</a>
+    <a href="showcase2c.html" class="btn ">別デザインを見る</a>
+  </div>
+
+  <div id="main">
+    <H1>HTMLファイル・CSS・ShowCase</H1>
+    <div class="infopanel">
+      <h2>これは何?</h2>
+      なんかCSS作ってみた練習です。
+      <h3>前提:</h3>
+      ページ表示に必要な前提として、おおまかに以下のとおり。
+      <ul class="bullet">
+      <li>jQuery 1.8.2 + jQueryUI 1.9.0 + twitterbootstrap v2.1.1 を使います。</li>
+      <li>TwitterBootstrapは <code>./bootstrap</code> 配下にそのまま構成を保持して配置します。</li>
+      <li>jQuery及びjQueryUI(datepicker)は <code>./lib</code> 配下に置きます。</li>
+      <li>CSSで使用する画像は他から指定のない限り<code>./lib/images</code>配下に置きます。</li>
+      </ul>
+    </div>
+
+    <div class="inputpanel">
+      <h2>Class: Input Panel</h2>
+      入力用パネル
+      <h3>本文</h3>
+      特に本文は&lt;p&gt;タグを意識することなく、記載します。<br>
+      テキストボックス等に使います
+
+    </div>
+
+    <div class="inputpanel">
+    inputpanel はスタックも、入れ子も可能です。
+      <div class="inputpanel">
+         そういうことです。
+      </div>
+    </div>
+
+    <div class="inputpanel">
+    <h2>入力コンポーネント</h2>
+
+      <h3>カレンダー表示(日本語化,YY/MM/DD)</h3>
+      <table>
+        <tr>
+        <td width="160px" align="right" style="padding-right:5px;"> 日付を選択</td>
+        <td ><input name="txtUserId" type="text" maxlength="10" id="txtDate" style="font-size: small;ime-mode:inactive;" />
+        ←日付入力はカレンダー表示可能。</td>
+        </tr>
+        <tr>
+        <td width="160px" align="right" style="padding-right:5px;"> テキスト文字</td>
+        <td ><input name="txtUserId" type="text" maxlength="40" id="txtUser" class="span4" /></td>
+        </tr>
+      </table>
+      <p>上記のように、入力コンポーネントは表組みとします。</p>
+      
+      <div class="infopanel">
+        確認事項:
+        <ul class="bullet">
+        <li>テキストボックス等入力フィールドの一部はフォーカス時に青色ハイライト(IE8以外)</li>
+        <li>必須項目は黒色・太字 → <code>class="required"</code> </li>
+        </ul>
+      </div>
+
+      <div class="infopanel">
+        Todo:
+        <ul class="bullet">
+        <li>項目タイトル のスタイル</li>
+        <li>クラス適用(適用可能部分)</li>
+        </ul>
+      </div>
+
+
+    </div>
+
+
+    <div class="inputpanel">
+    <h2>レイアウト</h2>
+
+      <h3>Spanによる指定…は…</h3>
+      <span class="warnred">以下の例では style="width:##px"を使っています。</span><br>
+      
+      <input name="txtInput1" type="text" maxlength="10" id="txtInput1" style="width:100px" value="０１２３４" /><br>
+      <input name="txtInput2" type="text" maxlength="20" id="txtInput2" style="width:200px" value="０１２３４５６７８９" /><br>
+      <input name="txtInput3" type="text" maxlength="50" id="txtInput3" style="width:650px" value="ＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷＷ" /><br>
+      <input name="txtInput4" type="text" maxlength="100" id="txtInput4" style="width:480px" value="０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９" /><br>
+
+    </div>
+
+    <div class="inputpanel">
+
+    <h2>エラー・警告・情報の表示</h2>
+
+    情報の表示<br>
+    <span class="warnred">エラーの表示</span><br>
+          <div class="errorpanel" >
+             <span class="warnred">エラーの表示<span class="warnred">
+          </div>
+
+    <div class="errorpanel">
+      Class: errorpanel<br>
+      エラー表示を行います 文字色の変更は別途<code>class="warnred"</code> とするなどしてください。 <span class="warnred">エラー表示は赤く赤く！！です。</span>
+    </div>
+
+    <div class="warningpanel">
+      Class: warningpanel<br>
+      警告表示を行います。文字色の変更は別途<code>class="warnred"</code> とするなどしてください。 <span class="warnred">警告表示も赤く赤く！！</span>
+    </div>
+
+    <div class="succeedpanel">
+      Class: succeedpanel<br>
+      成功した場合のパネル。<code>class="succeedpanel"</code>と記述します。
+    </div>
+
+    <div class="iinfopanel">
+      Class: iinfopanel<br>
+      情報表示表示を行います。アイコンありの場合は<code>class="iinfopanel"</code>と記述します。
+    </div>
+
+    <div class="infopanel">
+       <p><code>class="infopanel"</code> と記述するとアイコンなしのパネルを表示できます。javascriptがoffのときは開いたままとなります。</p>
+       <h4 class="accordion_header warnred">アコーディオン1</h4>
+       <p class="warnred" ><code>class="warnred"</code>と記述して、文字を赤くします。<br>重要な場合など、注意を喚起させます</p>
+       <h4 class="accordion_header successgreen">アコーディオン2</h4>
+       <p class="successgreen"><code>class="successgreen"</code>と記述して、文字を緑色にします。<br>処理が成功で完了した場合の色</p>
+       <h4 class="accordion_header">アコーディオン3</h4>
+       <p>通常のパネルに使用する文字色です。<br>じゅげむ　じゅげむ　ごこうのすりきれ　かいじゃりすいぎょの　すいぎょうまつ　うんらいまつ　ふうらいまつ　くうねるところにすむところ　やぶらこうじのぶらこうじ　ぱいぽ　ぱいぽ　ぱいぽのしゅーりんがん　しゅーりんがんのぐーりんだい　ぐーりんだいのぽんぽこぴーの　ぽんぽこなーの　ちょうきゅうめいのちょうすけ</p>
+    </div>
+
+    もちろん、テーブルレイアウトなども可能ではありますけれど。
+
+    <table width="100%" >
+      <tr>
+        <td width="50%">
+          <div class="errorpanel" >
+             エラー
+          </div>
+        </td>
+
+        <td width="50%">
+          <div class="warningpanel" >
+             警告
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="iinfopanel">
+             アイコンつき
+          </div>
+        </td>
+
+        <td>
+          <div class="infopanel">
+             アイコンなし
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <div class="infopanel">
+          「消せるパネル」はTwitterBootstrapによるもの。右端の &times; 押すと消えてくれます。 ただしJavascriptが有効になってないと消えてくれません。<br>
+          <div class="errorpanel" >
+          <button class="close" data-dismiss="alert">&times;</button>
+             エラー
+          </div>
+          <div class="warningpanel" >
+          <button class="close" data-dismiss="alert">&times;</button>
+             警告
+          </div>
+          <div class="iinfopanel">
+          <button class="close" data-dismiss="alert">&times;</button>
+             アイコンつき
+          </div>
+          <div class="infopanel">
+          <button class="close" data-dismiss="alert">&times;</button>
+             アイコンなし
+          </div>
+          <div class="succeedpanel">
+          <button class="close" data-dismiss="alert">&times;</button>
+             成功しました
+          </div>
+    </div>
+
+  </div>
+
+  <div class="inputpanel">
+
+    <h2>ボタン及び、リンクによるボタン表示</h2>
+
+    &lt;input&gt; タグのボタン、及び &lt;a&gt;  タグのリンクをボタン表示させています。現在のところリンクのみ画像つきボタンとしています。
+
+    <div class="infopanel">
+    <form method="post" action="example.cgi">
+
+    <input type="submit" name="btnOK" value="O K" onclick="return confirm('よろしいですか？');" id="btnOK" tabindex="52" class="btn-large btn-primary" />
+    <input type="submit" name="btnBack" value="戻　る" id="btnBack" tabindex="55" class="btn btn-large " onclick="alert('戻るボタンが押されました');" />
+    <br>
+    <a href="./" class="btn">リンクをボタンに</a>
+    <a href="./" class="btn users">ユーザー情報</a>
+    <a href="./" class="btn logoff">ログアウト</a>
+    <a href="./" class="btn computer">コンピューター</a><br>
+    <a href="./" class="btn printer">プリンター</a>
+    <a href="./" class="btn wireless">無線聞き</a>
+    <a href="./" class="btn help">ヘルプ</a>
+    <a href="./" class="btn spreadsheet">スプレッドシート</a>
+    <br>
+    <a href="./" class="btn btn-large">大きめボタン</a>
+    <a href="./" class="btn btn-primary ">大事なボタン</a>
+    <a href="./" class="btn btn-primary btn-large">大事で大きいボタン</a>
+
+    </div>
+  </div>
+
+  <div class="inputpanel">
+
+    いくつかのアイコン類のグラフィックは<a href="http://tango.freedesktop.org/Tango_Icon_Library">Tango Icon Library</a>を使っています。ダウンロードして適宜追加。
+
+  </div>
+
+
+  </div>
+  <div id="footer">
+    <a href="#container" class="btn btn-info" id="aaa"><span style="white-space: nowrap;"><img src="lib/images/go-up.png" alt="ページ上に戻る">ページ先頭に戻る<img src="lib/images/go-up.png" alt="ページ上に戻る"></span></a>
+  </div>
+</div>
+</form>
+</body>
+
+</html>
