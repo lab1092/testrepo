@@ -1,0 +1,82 @@
+
+-----------------------------------------------------------------------------
+X68000上でフォントファイルを作り、lhaで圧縮の後にフロッピーディスクで転送
+
+
+[X68000 "A:"=HDD "C:"=FDD ]
+
+A:> mkbdf68k.x > peke16k.bdf
+A:> mkbdf68r > peke16r.bdf
+
+A:> lha c peke.lzh peke*.*
+
+A:> copy peke.lzh c:\PEKE.LZH
+
+-----------------------------------------------------------------------------
+フロッピーディスクしかない場合(1):中間ファイルを作成
+
+[X68000 "A:"=FDD "B:"=FDD]
+
+A:> mkbdf68k.x -t > B:PEKE16K_.BDF
+
+
+[PC-UNIX "/dev/fd0"=FDD "/mnt"=mount_point]
+
+$ mount -t msdos /dev/fd0 /mnt
+$ cp /mnt/peke16k_.bdf ./
+$ umount /mnt
+
+$ cat peke16k_.bdf | sed y/:/"\n"/ > peke16k.bdf
+
+-----------------------------------------------------------------------------
+フロッピーディスクしかない場合(2):分割したファイルを作成してから、結合
+
+[X68000 "A:"=FDD "B:"=FDD]
+
+A:> mkbdf68k.x -a > B:PEKE16K.BDA
+(ディスクを入れ替え)
+A:> mkbdf68k.x -b > B:PEKE16K.BDB
+
+[PC-UNIX "/dev/fd0"=FDD "/mnt"=mount_point]
+
+$ mount -t msdos /dev/fd0 /mnt
+$ cp /mnt/peke16k.bda ./
+$ umount /mnt
+(ディスクを入れ替え)
+$ mount -t msdos /dev/fd0 /mnt
+$ cp /mnt/peke16k.bdb ./
+$ umount /mnt
+
+$ cat mkbdf68k.bda mkbdf68k.bdb > peke16k.bdf
+
+-----------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+BDFからPCFに変換して圧縮
+
+$ cat peke16k.bdf | bdftopcf | gzip > peke16k.pcf.gz
+$ cat peke16r.bdf | bdftopcf | gzip > peke16r.pcf.gz
+
+-----------------------------------------------------------------------------
+ボールド体作成:PC-UNIX編
+
+作成したプログラム"bdfbold"とそれぞれのフォントファイルがカレントディレクトリ
+にあるものとして、次のように入力し、実行します。 
+
+$ cat peke16r.bdf |./bdfbold  | sed s/Medium/Bold/ >peke16rb.bdf
+$ cat peke16k.bdf | ./bdfbold | sed s/Medium/Bold/ >peke16kb.bdf
+
+-----------------------------------------------------------------------------
+ボールド体作成:Win32編(..\win32\howtouse.txtを参照)
+
+魔法の呪文 
+
+A:> type peke16k.bdf  |  bdfbold  | cut0d  peke16kb.bdf
+A:> type peke16r.bdf  |  bdfbold  | cut0d  peke16rb.bdf
+
+-----------------------------------------------------------------------------
+ボールド体作成:おまけ(jiskan24.bdfをボールド体に)
+
+$ cat jiskan24.bdf | ./bdfbold |./bdfbold | sed s/Medium/Bold/ >jiskan24b.bdf
+
+-----------------------------------------------------------------------------
+eof

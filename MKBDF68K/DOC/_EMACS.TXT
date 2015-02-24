@@ -1,0 +1,47 @@
+;;; Sample ".emacs" File , For "PEKE16"
+(setup-japanese-environment) 
+(set-language-environment "Japanese") 
+
+(mw32-ime-initialize) 
+(setq default-inputmethod "MW32-IME") 
+
+(add-hook 'mw32-ime-on-hook 
+         (lambda () (set-cursor-color "brown"))) 
+(add-hook 'mw32-ime-off-hook 
+         (lambda () (set-cursor-color "black"))) 
+
+(setq mw32-ime-mode-line-state-indicator "[O]") 
+(setq mw32-ime-mode-line-state-indicator-list '("[-]" "[k]" "[-]" )) 
+
+;
+
+
+;;; BDF font sets
+;for PEKE16[kr] 
+
+(w32-auto-regist-bdf-font 
+ "bdf16-japanese-jisx0208-peke" "C:/USR/LOCAL/SHARE/FONTS/BDF/PEKE/peke16k.bdf" 0 ) 
+(w32-auto-regist-bdf-font 
+ "bdf16-latin-jisx0201-peke" "C:/USR/LOCAL/SHARE/FONTS/BDF/PEKE/peke16r.bdf" 0 ) 
+(w32-auto-regist-bdf-font 
+ "bdf16-katakana-jisx0201-peke" "C:/USR/LOCAL/SHARE/FONTS/BDF/PEKE/peke16r.bdf" 1 ) 
+
+;``peke16'' Font-set (X68000 CG-ROM FONT) 
+(new-fontset "peke16" 
+      '((ascii . "bdf16-latin-jisx0201-peke") 
+        (japanese-jisx0208 . "bdf16-japanese-jisx0208-peke") 
+        (latin-jisx0201 . "bdf16-latin-jisx0201-peke") 
+        (katakana-jisx0201 . "bdf16-katakana-jisx0201-peke") 
+       )) 
+
+
+;init frame
+(setq initial-frame-alist 
+      '((foreground-color . "black") 
+        (background-color . "white") 
+        ( top .0 ) ( left 0 )
+        ( width . 80 ) ( height . 25 )
+        (font . "peke16")
+))
+
+

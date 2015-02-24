@@ -1,0 +1,55 @@
+INDEX.TXT   2001.05.14
+-----------------------------------------------------------------------------
+
+  2001.04(+1)版です。
+  詳しくはREADME.TXTを
+
+-----------------------------------------------------------------------------
+
+INDEX.TXT      インデックスファイル
+README.TXT     MKBDF68kについて
+
+BDFBOLD.X      (X68k)ボールド体BDFフォント作成フィルタプログラム
+CUT0D.X        (X68k)Ox0D(CR)除去フィルタプログラム
+MKBDF16K.X     (X68k)全角BDFフォント作成プログラム
+MKBDF16R.X     (X68k)半角BDFフォント作成プログラム
+MK_BDF16.BAT   自動作成バッチファイル
+
+DOC\     ドキュメント・サンプルイメージ等
+    MKBDF68K.TXT   MKBDF68k使い方説明書(プレーンテキスト版)
+    MKBDF68K.HTM   MKBDF68k使い方説明書(HTML版)
+    TSUIKA.TXT     追加事項(プレーンテキスト版)
+    TSUIKA.HTM     追加事項(HTML版)
+    SECOND.HTM     以前のバージョンのドキュメント(HTML版)
+    SCRIPTS.TXT    コマンド、その他
+    _EMACS.TXT     ".emacs"の設定例
+    FONTALI.TXT    "fonts.alias"の設定例
+    KONCFG.TXT     "kon.cfg"の設定例
+    TABLE.TXT      X68kやその他のOSのファイル名の扱い(表)
+    SJISCHAR.TXT   動作検証用テキストファイル(半角及び全角文字)
+    KANJI16.PNG    k16(kanji16.bdf)フォント、サンプルイメージ
+    PEKE16K.PNG    peke16フォント、サンプルイメージ
+    MEADOW01.PNG   Meadow起動画面
+    MEADOW1.PNG    Peke16による描画
+    MEADOW2.PNG    Default-fontsetによる描画
+    SCRSHOT.PNG    KtermでPeke16を使った例
+    X68LOGO1.PNG   *
+    X68LOGO2.PNG   *
+
+
+SRC\    ソースファイル
+    BDFBOLD.C
+    BDFBOLD.TGZ
+    CUT0D.C
+    CUT0D.TGZ
+    MKBDF68K.ORG
+    MKBDF16K.C
+    MKBDF68R.C
+
+WIN32\    Win32バイナリ
+   BDFBOLD.EXE     (Win32)ボールド体BDFフォント作成フィルタプログラム
+   COT0D.EXE       (Win32)Ox0D(CR)除去フィルタプログラム
+   HOWTOUSE.TXT    bdfbold、cut0d使用法
+
+-----------------------------------------------------------------------------
+eof

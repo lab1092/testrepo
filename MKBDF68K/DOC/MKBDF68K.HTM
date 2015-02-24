@@ -1,0 +1,420 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+   <meta name="Author" content="Mitsuda">
+   <meta name="GENERATOR" content="Mozilla/4.75 [ja] (Win98; U) [Netscape]">
+   <title>MKBDF68K</title>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000EE" vlink="#551A8B" alink="#FF0000">
+<a NAME="top"></a>
+<table COLS=1 WIDTH="100%" BGCOLOR="#CCCCCC" >
+<tr>
+<td><font color="#000000">MKBDF68kはX68000のCG-ROMフォントから16ドットBDFフォントを作成し、最終的にはX
+Window(XFree86)のフォントとして、またMeadow 1.00のフォントとして使えるようにしようという目的で作られました。</font>
+<p><b><font color="#FF0000">重要</font></b>:「<b>バイナリ、<font color="#000000">ソース、ドキュメントすべてを含めて完全にフリー</font></b>」としたいと思います。詳しくは
+<a href="TSUIKA.HTM">tsuika.htm</a>を参照してください。また、以降の内容は<a href="SECOND.HTM">2000年4月時点のドキュメント(1999.09版)</a>に少し手を加えたものです。[2001.04.01]</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%">
+<table COLS=1 WIDTH="100%" BGCOLOR="#FFFFCC" >
+<tr>
+<td>
+<center><font color="#000099">&nbsp;(チョットX68000魂)</font>
+<br><font color="#000099"><font size=+2>&nbsp;<b>X Windowで</b></font><b><font size=+3>X68000</font><font size=+2>のROMフォントを表示する</font></b></font>
+<br><b><font color="#000099"><font size=+3>MKBDF68k</font></font></b>
+<p><b><font color="#000099"><font size=+1>ｂｙ三津田 哲雄(Mitsuda Tetsuo)</font></font></b></center>
+</td>
+</tr>
+</table>
+
+<hr WIDTH="100%">
+<ul>
+<li>
+<font size=+1><a href="#s1">はじめに</a></font></li>
+
+<li>
+<font size=+1><a href="#s2">X Windowで使用するフォントについて</a></font></li>
+
+<li>
+<font size=+1><a href="#s3">X68000で実際に行う作業</a></font></li>
+
+<li>
+<font size=+1><a href="#s4">X WindowでX68000のフォントを表示するまで</a></font></li>
+
+<li>
+<font size=+1><a href="#s5">BDFファイルから太字のBDFファイルを作成する</a></font></li>
+
+<li>
+<font size=+1><a href="#s5">konでX68000のフォントを!!</a></font></li>
+
+<li>
+<font size=+1><a href="#s7">Win95/98上のMeadowで使ってみる</a></font></li>
+
+<ul>
+<li>
+<a href="#c3">~/.emacs （抜粋）</a></li>
+</ul>
+
+<li>
+<font size=+1><a href="#s8">ソースファイルからのコンパイル</a></font></li>
+
+<li>
+<font size=+1><a href="#s9">あとがき</a></font></li>
+
+<li>
+<font size=+1><a href="#s11">使用（テスト)環境</a></font></li>
+</ul>
+
+<p><br>
+<hr WIDTH="100%">
+<br><a NAME="s1"></a>
+<br><b><font size=+1>はじめに</font></b>
+<p><b>Oh!X</b>が休刊になってから半年くらい経った頃でしょうか、どうしても時代の流れと、プロセッサのスピードには勝てず、いつしかPC-9801で動くPC-UNIX、FreeBSDをメインに使うようになっていました。当然、X68000はあまり使われなくなってしまったのはいうまでもありません。そのFreeBSDには当然UNIX上で動くウインドウ環境のXFree98(XFree86のPC-98版)を走らせていたのですが、どうも標準で用意されている16ドットフォント、k16(jiskan16.pcf.gz)が丸っこいのが気になってしょうがありません。というわけでいままで見慣れているX68000のROMフォントをX上で表示させてみようというのがそもそものきっかけです。
+<p><u>実行ファイル、ソース、ドキュメントの全てをフリーウェアとしプログラムの改造および再配布は自由とします。</u>ただしこれによって作成されたファイルやそれを元にして作成されたものはシャープに権利がありますので、作成されたフォントファイル等の再配布は禁止です。
+<br>&nbsp;
+<p>必要なものとして次のようなもの(?)があります。
+<br>&nbsp;
+<ul>
+<li>
+X68k本体(ハードディスクはあったほうがいいでしょう、フロッピーディスクでの運用は少々トリッキーな操作を必要とします。)</li>
+
+<li>
+rootログインできるUNIXマシン(もちろんX-windowが動いているマシンです)</li>
+
+<li>
+UNIX、X-windowについてある程度の知識(xfontsel,xfdを使うことが出来る)</li>
+
+<li>
+ソースプログラムを解読できる知識</li>
+
+<li>
+tar、gzipなどのツール(必須ではありませんが、あれば重宝します。)</li>
+</ul>
+使用環境は FreeBSD+XFree86、Linux+XFree86を想定しています。NetBSD/X68kはX68030が手元にないので厳密にはこうだ!とは言い切れませんが、同じX
+Window環境を構築出来るということでおおむねのところは同じ操作で表示することが出来るでしょう。適当に読みかえて実行して下さい。実際、BDFファイル形式でそのまま使えるkon等でも使えますし、さらにはMS-Windows
+95/98上で動くXEmacs(Mule)であるMeadowでも設定をすれば使うことが出来るようになります。
+<p>
+<hr WIDTH="100%">
+<br><a NAME="s2"></a>
+<br><b><font size=+1>X Windowで使用するフォントについて</font></b>
+<p>PC-UNIX(FreeBSD,Linux)のフリーで使うことの出来るX Windowである<b>XFree86</b>では、フォントはBDF形式というテキストファイルをPCF形式に変換したファイルをX
+Window上で使用しています。BDFからPCFへの変換はXFree86の標準パッケージで用意されている(はず)の<b>bdftopcf</b>というコマンドを使って変換します。ただ、これではフォントファイルがディスクのスペースを多く占有してしまうので、実際にはgzipやcompress等で圧縮してあることがほどんどです。
+<p>&nbsp;<tt> % bdftopcf &lt; fontfile.bdf | gzip > fontfile.pcf.gz</tt>
+<br>&nbsp;<tt> % bdftopcf &lt; fontfile.bdf | compress > fontfile.pcf.Z</tt>
+<p>もしかしたら他の環境ではBDFから他の形式に変換する必要があるかもしれませんが、全ての場合において<u>BDF形式のファイルさえあれば他の形式に変換出来るという点において共通性がある</u>といえます。
+<p>また、日本語を表示するためには、半角文字のBDFファイル、全角文字のBDFファイルそれぞれ必要になりますので、これからその2つのファイルをX68000で作成します。
+<p>
+<hr WIDTH="100%">
+<br><a NAME="s3"></a>
+<br><b><font size=+1>X68000で実際に行う作業</font></b>
+<p>実際に作業するといっても16ドットのBDFフォントファイルを生成するプログラムを実行するだけです。しかしながら、生成されるBDFフォントファイルが大きくなることとディスクアクセスの時間から、ハードディスクは必須になります。もちろん、ROMフォントを吸い出すのでX68000も必要であるのはいうまでもありません。抜け道としてはEX68を動かすという邪道な手もあり得るのですが、EX68上の動作確認は取っていませんので注意してください。
+<p>とりあえず注意することは、"~"(チルダ）と"\"（バックスラッシュ、円マーク）の扱いでしょう。SWITCH.Xを使って適切に設定しておきましょう。
+<p>実際に使うには、ハードディスクに1.4MB以上の空き領域があることを確認してから
+<p><tt>&nbsp; A:>MKBDF16K > PEKE16K.BDF</tt>
+<br><tt>&nbsp; A:>MKBDF16R > PEKE16R.BDF</tt>
+<p>とすればBDFフォントが生成されます。
+<p>今回BDFファイルをテキストファイルとみなしてリダイレクトを使っています。実はこのためにフォントのサイズがPEKE16K.BDFでは1.27MBの大きさになり、2HC(1.2MB)はおろか、2HD(1.23MB)にも入らないこととなります。困った、フロッピーディスク環境のひとは指をくわえているしかないのか？そんなことはありません。トリッキーな操作は必要ですが、２つの方法で問題を解決できます。
+<p>まずはUNIXでsedによる加工を前提としたBDFファイルを作成する方法です。プログラム実行時に"-t"(Tiny,Tmp)オプションを付けることで、中間ファイルを作るモードになります。違いは改行のかわりに":"を出力しているだけであったりします。
+<p><tt>&nbsp; (X68000) A:>MKBDF16K -t > PEKE16K_.BDF</tt>
+<br><tt>　　&nbsp; [フロッピーディスクで転送・・・]</tt>
+<br><tt>&nbsp; ( UNIX ) % sed y/:/"\n"/ peke16k_.bdf >peke16k.bdf</tt>
+<p>次に何とかフロッピーディスクに収まるようにBDFファイルを分割して作成しておき、UNIX側でファイルを結合させるという方法も"-a","-b"の各オプションを利用することで2HDフロッピーディスクを2枚使っての作業ではありますが、利用が可能です。
+<p><tt>&nbsp; (X68000) A:>MKBDF16K -a > PEKE16K.BDA</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A:>MKBDF16K
+-b > PEKE16K.BDB</tt>
+<br><tt>　　&nbsp; [フロッピーディスクで転送・・・]</tt>
+<br><tt>&nbsp; ( UNIX ) % cat peke16k.bda peke16k.bdb > peke16k.bdf</tt>
+<p>これらどちらかの方法で転送したファイルでこれからの作業を同じように行っていくことが出来ます。
+<p>"-t -a -b"のオプションはMKBDF16K.Xに限って有効です。MKBDF16R.Xではそのような指定をしても無駄ですのであしからず。
+<br>&nbsp;
+<br>&nbsp;
+<p>
+<hr WIDTH="100%">
+<br><a NAME="s4"></a>
+<br><b><font size=+1>X WindowでX68000のフォントを表示するまで</font></b>
+<br>&nbsp;
+<p>これからは実際にフォントを表示させるUNIXマシン上で行います。もちろんシステム内部の変更ということになるのでこれから先フォントの設定までの項目は<u>root権限での作業</u>になります。
+<br>&nbsp;
+<p>まずは適当な場所にファイルが転送され(圧縮などがされているのであればこの時点で解凍、展開をしておきます。)、目的のBDFファイルの名前が
+<p><tt>&nbsp;&nbsp;&nbsp; peke16k.bdf</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; peke16r.bdf</tt>
+<p>であることをlsコマンドなどを使って確認してください。英字は全て小文字です。ファイルの転送はどんな形をとってもかまいません。
+<p>この時点でフォントファミリ等の変更をしたい方はテキストエディタで変更して下さい。X
+Windowではフォントにエイリアスを付けることが可能ですが、例えばjiskan16.bdfとpeke16k.bdfをそっくりそのまま置き換えたい場合などにはここで編集することになります。
+<p>bdftopcfコマンドとgzipまたはcompressを使って変換、圧縮します。
+<p><tt>&nbsp;% bdftopcf &lt; peke16k.bdf | gzip&nbsp;&nbsp;&nbsp;&nbsp;
+> peke16k.pcf.gz</tt>
+<br><tt>&nbsp;% bdftopcf &lt; peke16r.bdf | gzip&nbsp;&nbsp;&nbsp;&nbsp;
+> peke16r.pcf.gz</tt>
+<p>次に、出来たファイルをX Windowの日本語のフォントなどが入っている場所にコピーします。X11R6であれば/usr/X11R6/lib/X11/fonts/misc/です。lsコマンドを使ってファイル名の最後の拡張子が合致しているかどうかを確認して下さい。
+<p>これではまだフォントファイルが登録されないので、mkfontdirコマンドを使ってfonts.dirファイルを更新します。
+<p><tt>&nbsp; % mkfontdir /usr/X11R6/lib/X11/fonts/misc/</tt>
+<p>/usr/X11R6/lib/X11/fonts/misc/以外に専用のディレクトリを作った、という場合には、/etc/XF86Configを変更した上でX-Windowを再起動する必要があります。
+<br>&nbsp;
+<p>また、この２つのファイルに対応したフォントのエイリアスを設定します。/usr/X11R6/lib/X11/fonts/misc/fonts.aliasに次の２行を追加します。(もちろんこの名前でないといけないというわけではないんですが。)
+<p><tt>peke16k -peke-fixed-medium-r-normal--16-150-75-75-c-160-jisx0208.1983-0</tt>
+<br><tt>peke16r -peke-fixed-medium-r-normal--16-150-75-75-c-80-jisx0201.1976-0</tt>
+<p>現在作業をX Window上で行っていて、X Windowを再起動させることなく文字を表示するには次のコマンドを実行します。
+<p>&nbsp; <tt>% xset fp rehash</tt>
+<p>これでフォントが表示出来るようになりました。xfontsel、xfdを実行して目的のフォントが表示できることを確認します。
+<p>&nbsp; <tt>% xfd -fn peke16r</tt>
+<p>さらなる確認のために、日本語ターミナルエミュレータを起動します(もしあれば)。
+<p>&nbsp;<tt> % kterm -km euc -fk peke16k -fr peke16r -fn peke16r &amp;</tt>
+<p>これで日本語のテキストを表示させるなどして正常に表示されれば終了です。X
+Window上で表示されるX68000のROMフォントを思う存分堪能してください。
+<br>&nbsp;
+<p>
+<hr WIDTH="100%">
+<br><a NAME="s5"></a>
+<br><b><font size=+1>BDFファイルから太字のBDFファイルを作成する</font></b>
+<p>そういえば強調文字（ボールド体）のBDFフォントファイルもこの際だから作ってしまいましょう。これから作成の手順をお教えしましょう。これで作成されるファイル、必須かというとそうでもありません。あくまでおまけ的なものとして考えてください。
+<p>用意するものはbdfbold.cと先ほど作成したpeke16k.bdf、peke16r.bdfです。特にpeke16k.bdfは中間ファイルではないことに注意してください。すでにこの3つのファイルはUNIXマシン上の適当な場所にコピーされているものとします。
+<p>これからの操作はUNIXマシン上で行います。X68000上でもBDFBOLD.Xで作成することも不可能ではないのですが、プロセッサのスピードがUNIXの方が速いと踏んでUNIXマシン上で処理します。X68kではハードディスクに最低4MBの空きがないと苦しいでしょう。
+<br>&nbsp;
+<p>まずはボールド体作成用プログラムを作りましょう。
+<p><tt>&nbsp; % gcc -o bdfbold bdfbold.c</tt>
+<p>エラーなくコンパイルが終了したら、ボールド体のフォントをpeke16rb.bdf、peke16kb.bdfとしてフォントファイルを作成します。コンパイラがパーザエラーを出してしまった場合には、UNIXマシン上のエディタで"^Z(CTRL+z)"をソースファイル上から削除して、コンパイルしてみてください（一応このためにUNIX上でコンパイルできるファイルをtar+gzipで固めたものを収録してあります。）。
+<p>作成したbdfboldとそれぞれのフォントファイルがカレントディレクトリにあるものとして、次のように入力し、実行します。
+<p><tt>&nbsp; % ./bdfbold &lt; peke16r.bdf | sed s/Medium/Bold/ >peke16rb.bdf</tt>
+<br><tt>&nbsp; % ./bdfbold &lt; peke16k.bdf | sed s/Medium/Bold/ >peke16kb.bdf</tt>
+<p>これを先ほどと同じような方法でX Windowのフォントとして登録します。 ちなみにエイリアスは次の通りに設定しましょう。
+<p><tt>peke16kb -peke-fixed-bold-r-normal--16-150-75-75-c-160-jisx0208.1983-0</tt>
+<br><tt>peke16rb -peke-fixed-bold-r-normal--16-150-75-75-c-80-jisx0201.1976-0</tt>
+<br>&nbsp;
+<p>'sed s/Medium/Bold/ 'は一体何をしているのか？フォントの先頭データ部に次のような加工をしています。察しのいい人なら「こんなのエディタで修正しても同じじゃん。」って思っているでしょうね。
+<p><tt>FONT -PEKE-Fixed-Medium-R-Normal--16-150-75-75-C-160-JISX0208.1983-0</tt>
+<br><tt>WEIGHT_NAME "Medium"</tt>
+<p><tt>FONT -PEKE-Fixed-Bold-R-Normal--16-150-75-75-C-160-JISX0208.1983-0</tt>
+<br><tt>WEIGHT_NAME "Bold"</tt>
+<p>実は、bdfboldは他のフォントも加工が可能だという噂もちらほら。かなりきびしい条件がありますが、ソースさえ解読できればなんとかなるでしょう。
+<p>
+<hr WIDTH="100%">
+<br><a NAME="s6"></a>
+<br><b><font size=+1>konでX68000のフォントを!!</font></b>
+<p>kon(漢字コンソール)でも作成したBDFファイルは使えます。640x480の画面なら80x30のX68000そっくりなテキスト画面が出来上がります。
+<p>何らかの理由でX Windowを使えない環境にあり、PC/AT機を使っている人には朗報(?)です。うまく表示を誤魔化せば（プロンプトを変えるのが一番手っとり早いでしょう)、「ノートで動くHuman68k（もどき）」も作成できます。ここではすでにkonがインストールされた状態であるというのを前提にして話を進めます。
+<p>まずは作成したBDFフォントファイルを/usr/share/fonts/peke/にコピーします。もちろんディレクトリは勝手に「掘って」下さい。
+<p><tt>&nbsp; % mkdir -p /usr/share/fonts/peke/</tt>
+<br><tt>&nbsp; % cp peke16k.bdf /usr/share/fonts/peke/</tt>
+<br><tt>&nbsp; % cp peke16r.bdf /usr/share/fonts/peke/</tt>
+<p>kon.cfgを編集します。FreeBSDのパッケージなら/usr/local/etc/kon.confを、RHL(RedHatLinux)なら/etc/kon.cfgが相当します。
+<p><tt>bdf:Stratup</tt>
+<br><tt>&nbsp; /usr/local/bin/fld -t bdf -n /usr/share/fonts/peke/peke16k.bdf</tt>
+<br><tt>&nbsp; /usr/local/bin/fld -t bdf -n /usr/share/fonts/peke/peke16r.bdf</tt>
+<p>次に環境変数をかえてプロンプトを"A:>"に変更します。csh系なら set prompt="A:>"とすればプロンプトは変更されます。sh系なら
+PS1="A:>"としましょう。もちろんkonを実行しないと画面は変わりません。当たり前です。
+<br>&nbsp;
+<p>まあ、「fish風」とかなんとかいってプロンプトをPC-UNIXで使っているままにしておくのも一つの手ではあります。
+<p>
+<hr WIDTH="100%">
+<br><a NAME="s7"></a>
+<br><b><font size=+1>Win95/98上のMeadowで使ってみる</font></b>
+<p><u>注意：2001.04.01時点で私はMeadow-1.00以降のバージョンの存在を知りません。この内容はそれ以降のバージョンでは適用できない可能性がありますので十分注意してください。この内容は2000年04月のものです。</u>
+<p>Windows95/98で動くEmacs(Mule)、Meadow-1.00をX68000のフォントで。このような事が現実のものとなりました。Mule
+on X68kのような気分が味わえること請け合いです。実は、この機構、ただ単にBDFフォントをロードしているだけなんですが。
+<p>Windows環境ならばEX68でのエミュレーションも捨て難いものがありますが、例えばMeadow
++ Cygwin 環境を使っているWindowsユーザで「X68000のフォントを使いたい」と思われている方のためのものです。特に、Pentium200MHzより遅いプロセッサを使っている方には朗報かと思いますが、いかがでしょうか。もちろん、X68000の画面がそのまま現れるわけではないですけど。
+<p>まずはMeadowのインストールから、といいたいところですが、Meadowをインストールするということ自体がかなりDeepな世界のことなんで、Meadowのインストール自体は扱いません。Meadowをインストールして一通りの設定、ホームディレクトリの設定等が済んだものとして、.emacsファイルを編集してX68000のフォントを表示してみる事に関してのみお話しましょう。
+<p>作成したBDFフォントファイル、peke16k.bdf、peke16r.bdfを
+<p>&nbsp;<tt> C:\USR\LOCAL\SHARE\FONTS\BDF\PEKE\</tt>
+<p>にコピーします。ここでは便宜上このディレクトリにしていますが、この限りではありません。フォントファイルのありかさえ正確に把握しているのなら以降の設定を適当に読み替えて進めてください。というわけで
+<p><tt>&nbsp; 半角BDFファイル － C:\USR\LOCAL\SHARE\FONTS\BDF\PEKE\peke16r.bdf</tt>
+<br><tt>&nbsp; 全角BDFファイル － C:\USR\LOCAL\SHARE\FONTS\BDF\PEKE\peke16k.bdf</tt>
+<p>がターゲットとなるフォントファイルです。
+<br>&nbsp;
+<br>&nbsp;
+<table COLS=1 WIDTH="100%" >
+<tr>
+<td BGCOLOR="#CCFFFF"><a NAME="c3"></a><tt>&nbsp;&nbsp; <b>~/.emacs （抜粋）</b></tt>
+<p><tt>(setup-japanese-environment)</tt>
+<br><tt>(set-language-environment "Japanese")</tt>
+<p><tt>(mw32-ime-initialize)</tt>
+<br><tt>(setq default-inputmethod "MW32-IME")</tt>
+<p><tt>(add-hook 'mw32-ime-on-hook</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (lambda () (set-cursor-color
+"brown")))</tt>
+<br><tt>(add-hook 'mw32-ime-off-hook</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (lambda () (set-cursor-color
+"black")))</tt>
+<p><tt>(setq mw32-ime-mode-line-state-indicator "[--]")</tt>
+<br><tt>(setq mw32-ime-mode-line-state-indicator-list '("--" "[あ]" "[--]"
+))</tt>
+<p><tt>;for PEKE16[kr]</tt>
+<br><tt>(w32-auto-regist-bdf-font</tt>
+<br><tt>&nbsp;"bdf16-japanese-jisx0208-peke" "c:/USR/LOCAL/SHARE/FONTS/BDF/PEKE/peke16k.bdf"
+0 )</tt>
+<br><tt>(w32-auto-regist-bdf-font</tt>
+<br><tt>&nbsp;"bdf16-latin-jisx0201-peke" "c:/USR/LOCAL/SHARE/FONTS/BDF/PEKE/peke16r.bdf"
+0 )</tt>
+<br><tt>(w32-auto-regist-bdf-font</tt>
+<br><tt>&nbsp;"bdf16-katakana-jisx0201-peke" "c:/USR/LOCAL/SHARE/FONTS/BDF/PEKE/peke16r.bdf"
+1 )</tt>
+<p><tt>;``peke16'' Font-set (X68000 CG-ROM FONT)</tt>
+<br><tt>(new-fontset "peke16"</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '((ascii . "bdf16-latin-jisx0201-peke")</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (japanese-jisx0208 .
+"bdf16-japanese-jisx0208-peke")</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (latin-jisx0201 . "bdf16-latin-jisx0201-peke")</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (katakana-jisx0201 .
+"bdf16-katakana-jisx0201-peke")</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ))</tt>
+<p><tt>(setq initial-frame-alist</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '((foreground-color . "black")</tt>
+<br><tt>&nbsp;(background-color . "white")</tt>
+<br><tt>&nbsp;(font . "peke16")</tt>
+<br><tt>))</tt></td>
+</tr>
+</table>
+
+<p>.emacsファイルが適切に設定されたら、あらためてMeadowを再起動させるとX68000のROMフォントで表示されているはずです。表示されない場合やおかしな表示になるときには、.emacsファイルをよく確認してみてください。
+<p>また、上記のように漢字が使われている場合には.emacsファイルの漢字コードに注意しましょう。
+<p>
+<hr WIDTH="100%">
+<br><a NAME="s8"></a>
+<br><b><font size=+1>ソースファイルからのコンパイル</font></b>
+<br>&nbsp;
+<p><tt>&nbsp; MKBDF16K.C&nbsp;&nbsp; 全角文字(jis-208)を生成するプログラムのソース</tt>
+<br><tt>&nbsp; MKBDF16K.ORG 全角文字(jis-208)を生成するプログラムのソース(オリジナル版)</tt>
+<br><tt>&nbsp; MKBDF16R.C&nbsp;&nbsp; 半角文字(jis-201)を生成するプログラムのソース</tt>
+<br><tt>&nbsp; BDFBOLD.C&nbsp;&nbsp;&nbsp; ボールド体を作成するフィルタプログラム</tt>
+<br><tt>&nbsp; CUT0D.C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 改行コードを0x0Aにするフィルタプログラム(qkcやnkf、ackの使用できる環境であればまず必要ないものです）</tt>
+<p>ソースファイルのコンパイルはお決まりのパターン、XC2.0以上の環境で
+<p><tt>&nbsp; A:>cc /y MKBDF16K.C</tt>
+<br><tt>&nbsp; A:>cc /y MKBDF16R.C</tt>
+<p><tt>&nbsp; A:>cc BDFBOLD.C</tt>
+<br><tt>&nbsp; A:>cc CUT0D.C</tt>
+<br>&nbsp;
+<p>としてコンパイルしてください。
+<p>フォントデータの吸い出し部にIOCS関数を使っているだけなので、GCCでのコンパイルもライブラリの指定さえきちんとすればコンパイル可能です。'
+-liocs 'の指定を忘れずに。
+<br>&nbsp;
+<p>UNIXでも利用可能なプログラムもあります。
+<p><tt>&nbsp; % cc -o bdfbold bdfbold.c</tt>
+<br><tt>&nbsp; % cc -o cut0d cut0d.c</tt>
+<p>として実行してください。
+<p>
+<hr WIDTH="100%">
+<br><a NAME="s9"></a>
+<br><b><font size=+1>あとがき</font></b>
+<p>プログラムのみでフォントファイルはありません。ということは実機が必要ということです。この部分は「実機が手元にある＝X68000のROMフォントに対して愛着がある」と勝手に判断しています。(EX68でのエミュレーションは理論上可能なのですが未確認です。HDイメージからどうやってWindows上のファイルに落とすんでしょうか？)
+<p>外字はjisx-212に準処しているかどうかわからないので、今の所保留にしてあります。外字フォントも登録するとハドソンの蜂マークなんかも表示出来るように・・・なることでしょう。もちろん自前で作成しましょうね。
+<p>24ドットフォントについては、まずよほど大きい画面で使っている人しか使わないだろうということと、差し替えてもそれほど違いの無い字体ということで16ドットフォントしか作りませんでした。圧縮してフロッピーディスクに収まるかどうかも怪しいですし（16ドットフォントの圧縮率からして入らないことはないでしょう)。
+<p>12ドットフォントは・・・要町フォントが存在します。ですからあえてそういうことをしなくても済むと思います。
+<br>&nbsp;
+<p>
+<hr WIDTH="100%">
+<br><a NAME="s11"></a>
+<br><b><font size=+1>使用（テスト)環境</font></b>
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" >
+<tr>
+<td>SHARP X68000 EXPERT2 HD
+<br>(68000/10MHz)</td>
+
+<td>Human68k ver 3.0</td>
+</tr>
+
+<tr>
+<td>NEC PC-9801 RA21
+<br>(IBM486SX3/60MHz)</td>
+
+<td>FreeBSD(98)2.2.2-R /XFree86 3.2 (XF98_TGUI)</td>
+</tr>
+
+<tr>
+<td>COMPAQ CONTURA400C
+<br>(486DX2/40MHz)</td>
+
+<td>Slackware3.5 + PJE-0.15cm
+<br>XFree86 3.3.3.1 (XF86_SVGA), kon2</td>
+</tr>
+
+<tr>
+<td>HITACHI FLORA3010CT
+<br>(486DX2/50MHz)</td>
+
+<td>FreeBSD 2.2.8
+<br>XFree86 3.3.3.1 (XF86_SVGA), kon2</td>
+</tr>
+
+<tr>
+<td>NEC PC-9821 Cx2
+<br>(Pentium/75MHz)</td>
+
+<td>Windows95/NEC
+<br>Meadow 1.0</td>
+</tr>
+
+<tr>
+<td>自作PC/AT互換機
+<br>(K6/233MHz)</td>
+
+<td>Windows98SE日本語版
+<br>RedhatLunux6.2日本語版</td>
+</tr>
+</table>
+
+<br>&nbsp;
+<p>XC ver2.1 -newkit-
+<br>&nbsp;
+<ul>
+<li>
+一応全てのソースについてX68000上においてGCCでもコンパイル可能です。</li>
+
+<li>
+一部のソースはFreeBSD上のgccでもコンパイル、動作確認をしています。</li>
+</ul>
+
+<p><br>参考資料：
+<br>&nbsp;
+<ul>
+<li>
+XC ver2.1 -newkit- の各マニュアル</li>
+
+<li>
+X68000 EXPERT 取扱説明書 (シャープ)</li>
+
+<li>
+XFree86 3.2 document</li>
+
+<li>
+XFree86 online manual</li>
+
+<li>
+kon2のドキュメント、Cソース</li>
+
+<li>
+jiskan16.bdf</li>
+
+<li>
+UNIX USER&nbsp; (ソフトバンクパブリッシング)</li>
+
+<li>
+ここまでできるFreeBSDパワーガイド (秀和システム)</li>
+</ul>
+
+<hr WIDTH="100%">
+<br>&nbsp;&nbsp;
+<div ALIGN=right><table COLS=1 WIDTH="100%" BGCOLOR="#FFFFCC" >
+<tr>
+<td>
+<div align=right><b><font color="#000000">2001.04.01 By Tetsuo Mitsuda(フリー化のための修正)</font></b>
+<br><b><font color="#000000">1999.09 by Teteuo.Mitsuda (加筆修正)</font></b>
+<br><b><font color="#000000">1998.10 by Tetsuo.Mitsuda</font></b>
+<br><b><font color="#000000">作成者：三津田 哲雄</font></b>
+<br><b><font color="#000000">メールアドレス：なし</font></b>
+<br><b><font color="#000000">最終更新日：2001.04.01?</font></b>
+<br><b><font color="#000000">ターゲットOS：Human68k/FreeBSD/Linux/Windows9x</font></b></div>
+</td>
+</tr>
+</table></div>
+
+<div align=right><a href="#top">ファイルの先頭へ</a></div>
+(eof)
+<br>&nbsp;
+</body>
+</html>

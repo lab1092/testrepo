@@ -1,0 +1,371 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+   <meta name="Author" content="Mitsuda">
+   <meta name="GENERATOR" content="Mozilla/4.75 [ja] (Win98; U) [Netscape]">
+   <title>MKBDF68K</title>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000EE" vlink="#551A8B" alink="#FF0000">
+&nbsp;
+<br>[<b><font color="#FF0000">重要</font></b>]:このドキュメントは1999.09版のドキュメントです。こちらがOh!X2001年春号に掲載された文章のもとになったものです。権利等についての記述が本文中では2001.04版と違います。この部分は2001.04版に準じることとし、このドキュメントについても再配布等を認めます。
+<p>表記が統一されていない、表現におかしい箇所があるなど、完全なドキュメントではありませんが、書いた当時(1999.09)のままにしてあります。
+<br>
+<hr WIDTH="100%">
+<br>&nbsp;
+<table COLS=1 WIDTH="100%" BACKGROUND="X68LOGO.PNG" >
+<tr>
+<td><font color="#000066">このドキュメントはX680x0のROMフォントを吸い出してX11で使われるBDFフォントを作ってしまおうという目的で作成されたプログラムについての解説として書かれました。</font>
+<p><font color="#000066">MKBDF68kはX68kのCG-ROMフォントから16ドットBDFフォントを作成し、最終的にはXFree86のフォントとして、またMeadowのフォントとして使えるようにしようという目的で作られました。(改訂2版)</font></td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%">
+<table COLS=1 WIDTH="100%" BACKGROUND="X68LOGO1.PNG" >
+<tr>
+<td>
+<center><font color="#000099">&nbsp;(チョットX68k魂)</font>
+<br><font color="#000099"><font size=+2>&nbsp;<b>X-windowで</b></font><b><font size=+3>X68k</font><font size=+2>のROMフォントを表示する</font></b></font>
+<br><b><font color="#000099"><font size=+3>MKBDF68k</font>(改訂2版)&nbsp;</font></b>
+<br><b><font color="#000099"><font size=+1>ｂｙ三津田 哲雄(Mitsuda Tetsuo)</font></font></b></center>
+</td>
+</tr>
+</table>
+
+<hr WIDTH="100%">
+<br><b><font size=+1>はじめに</font></b>
+<p><b>Oh!X</b>が休刊になってから半年くらい経った頃でしょうか、どうしても時代の流れと、プロセッサのスピードには勝てず、いつしかPC-9801で動くPC-UNIX、FreeBSDをメインに使うようになっていました。当然、X68kはあまり使われなくなってしまったのはいうまでもありません。そのFreeBSDには当然UNIX上で動くウインドウ環境のXFree98(XFree86のPC-98版)を走らせていたのですが、どうも標準で用意されている16ドットフォント、jiskan16が丸っこいのが気になってしょうがありません。というわけでいままで見慣れているX68kのROMフォントをX上で表示させてみようというのがそもそものきっかけです。
+<p>というわけで「こんな物でよかったらどうぞ」的な発想で公表することに決定しました。ただ、<u>他の方がすでに対応されている可能性は十分にありえます</u>ので、あまりツッコミは入れないように。
+<p>もちろん、<u>実行ファイル、ソースの類は全てフリーウェアとして扱って構いません</u>。ただしこれによって作成されたファイルやそれを元にして作成されたものはSHARPに権利がありますので、再配布等は一応禁止です。
+<br>&nbsp;
+<p>必要なものとして次のようなもの(?)があります。
+<br>&nbsp;
+<ul>
+<li>
+X68k本体(ハードディスクはあったほうがいいでしょう、フロッピーディスクでの運用は少々トリッキーな操作を必要とします。)</li>
+
+<li>
+rootログインできるUNIXマシン(もちろんX-windowが動いているマシンです)</li>
+
+<li>
+UNIX、X-windowについてある程度の知識(xfontsel,xfdを使うことが出来る)</li>
+
+<li>
+tar、gzipなどのツール</li>
+
+<li>
+<b>X68k魂、ハック魂 :-)</b></li>
+</ul>
+
+<p><br>使用環境は FreeBSD+XFree86、Linux+XFree86を想定しています。NetBSD/X68kはX68030が手元にないので厳密にはこうだ！とは言い切れませんが、同じX-window環境ということでおおむねのところは同じ操作で表示することが出来るでしょう。適当に読みかえて実行して下さい。実際、BDFファイル形式でそのまま使えるkon等でも使えますし、さらにはMS-Windows95/98上で動くXEmacs(Mule)であるMeadowでも設定をすれば使うことが出来るようになります。
+<p>さあ、君のデーモン君やペンギン君を「<b>ぺけろく教</b>」に入信させましょう。
+<p>
+<hr WIDTH="100%">
+<p><b><font size=+1>X-Windowで使用するフォントについて</font></b>
+<p>PC-UNIX(FreeBSD,Linux)のフリーで使うことの出来るX-windowである<b>XFree86</b>では、フォントはBDF形式というテキストファイルをPCF形式に変換したファイルをX-Window上で使用しています。BDFからPCFへの変換はX-Windowの標準パッケージで用意されている(はず)の<b>bdftopcf</b>というコマンドを使って変換します。ただ、これではフォントファイルがディスクのスペースを多く占有してしまうので、実際にはgzipやcompress等で圧縮してあることがほどんどです。
+<p>&nbsp;<tt> % bdftopcf &lt; fontfile.bdf | gzip > fontfile.pcf.gz</tt>
+<br>&nbsp;<tt> % bdftopcf &lt; fontfile.bdf | compress > fontfile.pcf.Z</tt>
+<p>もしかしたら他の環境ではBDFから他の形式に変換する必要があるかもしれませんが、全ての場合において<u>BDF形式のファイルさえあれば他の形式に変換出来るという点において共通性がある</u>といえます。
+<p>ということは、BDFファイルが用意できればX-windowの動作する環境でありさえすれば好きなフォントを使用できるということで、Mac(MkLinux,NetBSD/m68k)でさえもX68kのROMフォントをX-window上で表示出来るということになります、多分。
+<p>実はX-window環境でなくても、DOS/Vマシン用に用意されているkon（漢字コンソール）などの利用によってこのフォントを表示させることもできます。
+<p>また、日本語を表示するためには、半角文字のBDFファイル、全角文字のBDFファイルそれぞれ必要になりますので、これからその2つのファイルをX68kで作成します。
+<p>
+<hr WIDTH="100%">
+<br>&nbsp;
+<p><b><font size=+1>X68kで実際に行う作業</font></b>
+<p>実際に作業するといっても16ドットのBDFフォントファイルを生成するプログラムを実行するだけです。しかしながら、生成されるBDFフォントファイルが大きくなることとディスクアクセスの時間から、ハードディスクは必須になります。もちろん、ROMフォントを吸い出すのでX68kも必要であるのはいうまでもありません。抜け道としてはEX68を動かすという邪道な手もあり得るのですが、EX68上の動作確認は取っていませんので注意してください。
+<p>とりあえず注意することは、"~"(チルダ）と"\"（バックスラッシュ、円マーク）の扱いでしょう。SWITCH.Xを使って適切に設定しておきましょう。
+<p>実際に使うには、ハードディスクに1.4MB以上の空き領域があることを確認してから
+<p><tt>&nbsp; A:>MKBDF16K > PEKE16K.BDF</tt>
+<br><tt>&nbsp; A:>MKBDF16R > PEKE16R.BDF</tt>
+<p>とすればBDFフォントが生成されます。
+<p>今回BDFファイルをテキストファイルとみなしてリダイレクトを使っています。実はこのためにフォントのサイズがPEKE16K.BDFでは1.27MBの大きさになり、2HC(1.2MB)はおろか、2HD(1.23MB)にも入らないこととなります。困った、フロッピーディスク環境のひとは泣き寝入りするしかないのか？そんなことはありません。トリッキーな操作は必要ですが、２つの方法で問題を解決できます。
+<p>まずはUNIXでsedによる加工を前提としたBDFファイルを作成する方法です。プログラム
+<br>実行時に"-t"(Tiny,Tmp)オプションを付けることで、中間ファイルを作るモードになります。違いは改行のかわりに":"を出力しているだけであったりします。
+<p><tt>&nbsp; (X68000) A:>MKBDF16K -t > PEKE16K_.BDF</tt>
+<br><tt>　　&nbsp; [フロッピーディスクで転送・・・]</tt>
+<br><tt>&nbsp; ( UNIX ) % sed y/:/"\n"/ peke16k_.bdf >peke16k.bdf</tt>
+<p>次に何とかフロッピーディスクに収まるようにBDFファイルを分割して作成しておき、UNIX側でファイルを結合させるという方法も"-a","-b"の各オプションを利用することで2HDフロッピーディスクを2枚使っての作業ではありますが、利用が可能です。
+<p><tt>&nbsp; (X68000) A:>MKBDF16K -a > PEKE16K.BDA</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A:>MKBDF16K
+-b > PEKE16K.BDB</tt>
+<br><tt>　　&nbsp; [フロッピーディスクで転送・・・]</tt>
+<br><tt>&nbsp; ( UNIX ) % cat peke16k.bda peke16k.pdb > peke16k.bdf</tt>
+<p>これらどちらかの方法で転送したファイルでこれからの作業を同じように行っていくことが出来ます。2つ方法を用意したのは一応理由があり、少しでも高速に処理をしたい場合には始めの方法を、sedが見付からないなどの場合に後の方法をと思ったからです。もちろん、sedのないUNIX環境は無いでしょうが(それではそのマシンは欠陥マシンと呼ばれても仕方が無い)、書いたスクリプトが思った通りに動かない可能性は無いわけではありません。その場合は後の方法を利用してください。
+<p>"-t -a -b"のオプションはMKBDF16K.Xに限って有効です。MKBDF16R.Xではそのような指定をしても無駄ですのであしからず。
+<br>&nbsp;
+<br>&nbsp;
+<table COLS=1 WIDTH="100%" >
+<tr>
+<td BGCOLOR="#FFFFCC">Column：フロッピーディスクを使ったデータの転送について&nbsp;
+<p>X68kのフロッピーディスクが3.5"ならばMS-DOS、1.2MB(2HC)フォーマットのメディアを使うことでDOS／V機にも転送が出来ます。もちろん、1.23MBフォーマットのメディアだと、PC-98x1に転送することが出来ます。PC-UNIXに限っていえば、カーネルから意図的にMS-DOSファイルシステムのサポートを削除しない限り、mountコマンドでMS-DOSフォーマットのフロッピーをマウントできるはずです。5"の場合は適当にメディアコンバートして転送してもらうしかありません。1.2MB(2HC)フォーマットで転送っていっても最近のWindowsが動くようなマシンは5"ベイはあっても5"FDDは積んでないから物理的に無理でしょう。
+<p>MS-DOSでは8+3文字の制限があり、そのファイル名は大文字でなければならないという点に注意しておきましょう。TwentyOne.xを使ってマルチピリオド、21文字対応、大／小文字の区別ありという環境を作っている方は特に気を付けましょう。
+<p>Human68kフォーマットされたディスクはMS-DOSではアクセスが可能ですが、UNIX上ではまずマウントされないことでしょう。というわけで、転送の際にフロッピーディスクを使う場合にはMS-DOSでフォーマットしたものを使いましょう。
+<p>ほかにもディスクイメージ(MS-DOSのフォーマットではなく)での転送というのもあるらしいのですが、やったことがないのでよくわかりません。
+<p>個人的な意見ですが、FreeBSD2.xではVFATのサポートが無いものがあります。この問題は3.xあたりではクリアされているようですが、基本的にDOSの8+3文字をもとに命名しています。この方がわずらわしくないと思いますがどうでしょう。</td>
+</tr>
+</table>
+
+<table COLS=1 WIDTH="100%" >
+<tr>
+<td BGCOLOR="#FFFFCC">Column :MS-DOS / Human68k における改行コードについて
+<p>MS-DOS/Human68kの改行コードは"CR+LF(0x0A+0x0D)"ということは周知のこととして説明していきます。
+<p>MS-DOS/Human68kではファイルモードに主にテキストファイルを扱うTEXTモードとバイナリファイルを扱うBINARYモードがあります。これら2つのOSではファイルを作成する場合には明示しない限りはテキストモードで作成されます。この場合、ファイルに"CR(0x0A)"のみを書き込んだ場合には"CR+LF(0x0A+0x0D)"が自動的に書き込まれるという仕組みになっています。
+<p>対して、"BINARYモード"でファイルを作成すると、"CR(0x0A)"を書き込んだとき、そのままの形、"CR(0x0A)"で書き込まれることになります。
+<p>これらのことを踏まえた上で、UN*Xの改行コードは"CR(0x0A)"であることを考えると、少なくともMS-DOS/Human68kではTEXTモードを使うわけにはいきません。例えばUNIXから持ってきたテキストファイルをTYPEコマンドで出力したという場合、余計な"LF(0x0D)"が標準出力に出力されているのです。stdoutは通常TEXTモードでオープンされるのが普通ですから、例えば"type
+fugaunix.txt > fugados.txt"とした場合の2つのファイルが違うものになってしまうということがあり得るのです。
+<p>添付されているcut0d.cは改行コードを"CR+LF(0x0A+0x0D)"から"CR(0x0A)"に簡易変換するプログラムです。標準出力に出力する代わりにそのままファイルに書き込んでいます。また、mkbdf16k.c内でもこれを利用してトリックを仕掛けています。</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%">
+<br><b><font size=+1>X-windowでX68kのフォントを表示するまで</font></b>
+<br>&nbsp;
+<p>これからは実際にフォントを表示させるUNIXマシン上で行います。もちろんシステム内部の変更ということになるのでこれから先フォントの設定までの項目は<u>root権限での作業</u>になります。
+<br>&nbsp;
+<p>まずは適当な場所にファイルが転送され(圧縮などがされているのであればこの時点で解凍、展開をしておきます。)、目的のBDFファイルの名前が
+<p><tt>&nbsp;&nbsp;&nbsp; peke16k.bdf</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; peke16r.bdf</tt>
+<p>であることをlsコマンドなどを使って確認してください。英字は全て小文字です。ファイルの転送はどんな形をとってもかまいません。
+<p>この時点でフォントファミリ等の変更をしたい方はテキストエディタで変更して下さい。X-windowではフォントにエイリアスを付けることが可能ですが、例えばjiskan16.bdfとpeke16k.bdfをそっくりそのまま置き換えたい場合などにはここで編集することになります。
+<p>bdftopcfコマンドとgzipまたはcompressを使って変換、圧縮します。
+<p><tt>&nbsp;% bdftopcf &lt; peke16k.bdf | gzip&nbsp;&nbsp;&nbsp;&nbsp;
+> peke16k.pcf.gz</tt>
+<br><tt>&nbsp;% bdftopcf &lt; peke16r.bdf | gzip&nbsp;&nbsp;&nbsp;&nbsp;
+> peke16r.pcf.gz</tt>
+<p>次に、出来たファイルをX-windowの日本語のフォントなどが入っている場所にコピーします。X11R6であれば/usr/X11R6/lib/X11/fonts/misc/です。lsコマンドを使ってファイル名の最後の拡張子が合致しているかどうかを確認して下さい。
+<p>これではまだフォントファイルが登録されないので、mkfontdirコマンドを使ってfonts.dirファイルを更新します。
+<p><tt>&nbsp; % mkfontdir /usr/X11R6/lib/X11/fonts/misc/</tt>
+<p>/usr/X11R6/lib/X11/fonts/misc/以外に専用のディレクトリを作った、という場合には、/etc/XF86Configを変更した上でX-Windowを再起動する必要があります。
+<br>&nbsp;
+<p>また、この２つのファイルに対応したフォントのエイリアスを設定します。/usr/X11R6/lib/X11/fonts/misc/fonts.aliasに次の２行を追加します。(もちろんこの名前でないといけないというわけではないんですが。)
+<p><tt>peke16k -peke-fixed-medium-r-normal--16-150-75-75-c-160-jisx0208.1983-0</tt>
+<br><tt>peke16r -peke-fixed-medium-r-normal--16-150-75-75-c-80-jisx0201.1976-0</tt>
+<p>現在作業をX-window上で行っていて、X-windowを再起動させることなく文字を表示するには次のコマンドを実行します。
+<p>&nbsp; <tt>% xset fp rehash</tt>
+<p>これでフォントが表示出来るようになりました。xfontsel、xfdを実行して目的のフォントが表示できることを確認します。
+<p>&nbsp; <tt>% xfd -fn peke16r</tt>
+<p>さらなる確認のために、日本語ターミナルエミュレータを起動します(もしあれば)。
+<p>&nbsp;<tt> % kterm -km euc -fk peke16k -fr peke16r -fn peke16r &amp;</tt>
+<p>これで日本語のテキストを表示させるなどして正常に表示されれば終了です。X-window上で表示されるX68kのROMフォントを思う存分堪能してください。
+<br>&nbsp;
+<p>
+<hr WIDTH="100%">
+<br>&nbsp;
+<p><b><font size=+1>BDFファイルから太字のBDFファイルを作成する</font></b>
+<p>そういえば強調文字（ボールド体）のBDFフォントファイルもこの際だから作ってしまいましょう。これから作成の手順をお教えしましょう。これで作成されるファイル、必須かというとそうでもありません。あくまでおまけ的なものとして考えてください。
+<p>用意するものはbdfbold.cと先ほど作成したpeke16k.bdf、peke16r.bdfです。特にpeke16k.bdfは中間ファイルではないことに注意してください。すでにこの3つのファイルはUNIXマシン上の適当な場所にコピーされているものとします。
+<p>これからの操作はUNIXマシン上で行います。X68k上でもBDFBOLD.Xで作成することも不可能ではないのですが、プロセッサのスピードがUNIXの方が速いと踏んでUNIXマシン上で処理します。X68kではハードディスクに最低4MBの空きがないと苦しいでしょう。
+<br>&nbsp;
+<p>まずはボールド体作成用プログラムを作りましょう。
+<p><tt>&nbsp; % gcc -o bdfbold bdfbold.c</tt>
+<p>エラーなくコンパイルが終了したら、ボールド体のフォントをpeke16rb.bdf、peke16kb.bdfとしてフォントファイルを作成します。コンパイラがパーザエラーを出してしまった場合には、UNIXマシン上のエディタで"^Z(CTRL+z)"をソースファイル上から削除して、コンパイルしてみてください（一応このためにUNIX上でコンパイルできるファイルをtar+gzipで固めたものを収録してあります。）。
+<p>作成したbdfboldとそれぞれのフォントファイルがカレントディレクトリにあるものとして、次のように入力し、実行します。
+<p><tt>&nbsp; % ./bdfbold &lt; peke16r.bdf | sed s/Medium/Bold/ >peke16rb.bdf</tt>
+<br><tt>&nbsp; % ./bdfbold &lt; peke16k.bdf | sed s/Medium/Bold/ >peke16kb.bdf</tt>
+<p>これを先ほどと同じような方法でX-windowのフォントとして登録します。 ちなみにエイリアスは次の通りに設定しましょう。
+<p><tt>peke16kb -peke-fixed-bold-r-normal--16-150-75-75-c-160-jisx0208.1983-0</tt>
+<br><tt>peke16rb -peke-fixed-bold-r-normal--16-150-75-75-c-80-jisx0201.1976-0</tt>
+<br>&nbsp;
+<p>'sed s/Medium/Bold/ 'は一体何をしているのか？フォントの先頭データ部に次のような加工をしています。察しのいい人なら「こんなのエディタで修正しても同じじゃん。」って思っているでしょうね。
+<p><tt>FONT -PEKE-Fixed-Medium-R-Normal--16-150-75-75-C-160-JISX0208.1983-0</tt>
+<br><tt>WEIGHT_NAME "Medium"</tt>
+<p><tt>FONT -PEKE-Fixed-Bold-R-Normal--16-150-75-75-C-160-JISX0208.1983-0</tt>
+<br><tt>WEIGHT_NAME "Bold"</tt>
+<p>実は、bdfboldは他のフォントも加工が可能だという噂もちらほら。かなりきびしい条件がありますが、ソースさえ解読できればなんとかなるでしょう。
+<p>
+<hr WIDTH="100%">
+<p><b><font size=+1>konでX68kのフォントを!!</font></b>
+<p>kon(漢字コンソール)でも作成したBDFファイルは使えます。640x480の画面なら80x30のX68kそっくりなテキスト画面が出来上がります。
+<p>何らかの理由でX-windowを使えない環境にあり、DOS/V機を使っている人には朗報(?)です。うまく表示を誤魔化せば（プロンプトを変えるのが一番手っとり早いでしょう)、「ノートで動くHuman68k（もどき）」も作成できます(が、konとノートパソコンの相性はあまりよくないようです）。ここではすでにkonがインストールされた状態であるというのを前提にして話を進めます。
+<p>まずは作成したBDFフォントファイルを/usr/share/fonts/peke16/にコピーします。もちろんディレクトリは勝手に「掘って」下さい。
+<p><tt>&nbsp; % mkdir -p /usr/share/fonts/</tt>
+<br><tt>&nbsp; % cp peke16k.bdf /usr/share/fonts</tt>
+<br><tt>&nbsp; % cp peke16r.bdf /usr/share/fonts</tt>
+<p>kon.cfgを編集します。FreeBSDのパッケージなら/usr/local/etc/kon.confを、RHL(RedHatLinux)なら/etc/kon.cfgが相当します。
+<p><tt>bdf:Stratup</tt>
+<br><tt>&nbsp; /usr/local/bin/fld -t bdf -n /usr/share/fonts/peke16k.bdf</tt>
+<br><tt>&nbsp; /usr/local/bin/fld -t bdf -n /usr/share/fonts/peke16r.bdf</tt>
+<p>次に環境変数をかえてプロンプトを"A:>"に変更します。csh系なら set prompt="A:>"とすればプロンプトは変更されます。sh系なら
+PS1="A:>"としましょう。もちろんkonを実行しないと画面は変わりません。当たり前です。
+<p>
+<hr WIDTH="100%">
+<p><b><font size=+1>Win95/98上のMeadowで使ってみる</font><font color="#FF0000">[New!!]</font></b>
+<p>Windows95/98で動くEmacs(Mule)、Meadow-1.00をX68kのフォントで。このような事が現実のものとなりました。Mule
+on X68kのような気分が味わえること請け合いです。実は、この機構、ただ単にBDFフォントをロードしているだけなんですが。
+<p>Windows環境ならばEX68でのエミュレーションも捨て難いものがありますが、例えばMeadow
++ Cygwin 環境を使っているWindowsユーザで「X68kのフォントを使いたい」と思われている方のためのものです。特に、Pentium200MHzより遅いプロセッサを使っている方には朗報かと思いますが、いかがでしょうか。もちろん、X68kの画面がそのまま現れるわけではないですけど。
+<p>まずはMeadowのインストールから、といいたいところですが、Meadowをインストールするということ自体がかなりDeepな世界のことなんで、Meadowのインストール自体は扱いません。Meadowをインストールして一通りの設定、ホームディレクトリの設定等が済んだものとして、.emacsファイルを編集してX68kのフォントを表示してみる事に関してのみお話しましょう。
+<p>作成したBDFフォントファイル、peke16k.bdf、peke16r.bdfを
+<p>&nbsp;<tt> C:\USR\SHARE\FONTS\BDF\PEKE\</tt>
+<p>にコピーします。ここでは便宜上このディレクトリにしていますが、この限りではありません。フォントファイルのありかさえ正確に把握しているのなら以降の設定を適当に読み替えて進めてください。というわけで
+<p><tt>&nbsp; 半角BDFファイル － C:\USR\SHARE\FONTS\BDF\PEKE\peke16r.bdf</tt>
+<br><tt>&nbsp; 全角BDFファイル － C:\USR\SHARE\FONTS\BDF\PEKE\peke16k.bdf</tt>
+<p>がターゲットとなるフォントファイルです。
+<br>&nbsp;
+<br>&nbsp;
+<table COLS=1 WIDTH="100%" >
+<tr>
+<td BGCOLOR="#CCFFFF"><tt>&nbsp;&nbsp; <b>~/.emacs （抜粋）</b></tt>
+<p><tt>(setup-japanese-environment)</tt>
+<br><tt>(set-language-environment "Japanese")</tt>
+<p><tt>(mw32-ime-initialize)</tt>
+<br><tt>(setq default-inputmethod "MW32-IME")</tt>
+<p><tt>(add-hook 'mw32-ime-on-hook</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (lambda () (set-cursor-color
+"brown")))</tt>
+<br><tt>(add-hook 'mw32-ime-off-hook</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (lambda () (set-cursor-color
+"black")))</tt>
+<p><tt>(setq mw32-ime-mode-line-state-indicator "[--]")</tt>
+<br><tt>(setq mw32-ime-mode-line-state-indicator-list '("--" "[あ]" "[--]"
+))</tt>
+<p><tt>;for PEKE16[kr]</tt>
+<br><tt>(w32-auto-regist-bdf-font</tt>
+<br><tt>&nbsp;"bdf16-japanese-jisx0208-peke" "c:/USR/LOCAL/SHARE/FONTS/BDF/PEKE/peke16k.bdf"
+0 )</tt>
+<br><tt>(w32-auto-regist-bdf-font</tt>
+<br><tt>&nbsp;"bdf16-latin-jisx0201-peke" "c:/USR/LOCAL/SHARE/FONTS/BDF/PEKE/peke16r.bdf"
+0 )</tt>
+<br><tt>(w32-auto-regist-bdf-font</tt>
+<br><tt>&nbsp;"bdf16-katakana-jisx0201-peke" "c:/USR/LOCAL/SHARE/FONTS/BDF/PEKE/peke16r.bdf"
+1 )</tt>
+<p><tt>;``peke16'' Font-set (X68000 CG-ROM FONT)</tt>
+<br><tt>(new-fontset "peke16"</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '((ascii . "bdf16-latin-jisx0201-peke")</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (japanese-jisx0208 .
+"bdf16-japanese-jisx0208-peke")</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (latin-jisx0201 . "bdf16-latin-jisx0201-peke")</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (katakana-jisx0201 .
+"bdf16-katakana-jisx0201-peke")</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ))</tt>
+<p><tt>(setq initial-frame-alist</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; '((foreground-color . "black")</tt>
+<br><tt>&nbsp;(background-color . "white")</tt>
+<br><tt>&nbsp;(font . "peke16")</tt>
+<br><tt>))</tt></td>
+</tr>
+</table>
+
+<p>.emacsファイルが適切に設定されたら、あらためてMeadowを再起動させるとX68kのROMフォントで表示されているはずです。表示されない場合やおかしな表示になるときには、.emacsファイルをよく確認してみてください。
+<p>
+<hr WIDTH="100%">
+<p><b><font size=+1>ソースファイルからのコンパイル</font></b>
+<br>&nbsp;
+<p><tt>&nbsp; MKBDF16K.C&nbsp;&nbsp; 全角文字(jis-208)を生成するプログラムのソース</tt>
+<br><tt>&nbsp; MKBDF16K.ORG 全角文字(jis-208)を生成するプログラムのソース(オリジナル版)</tt>
+<br><tt>&nbsp; MKBDF16R.C&nbsp;&nbsp; 半角文字(jis-201)を生成するプログラムのソース</tt>
+<br><tt>&nbsp; BDFBOLD.C&nbsp;&nbsp;&nbsp; ボールド体を作成するフィルタプログラム</tt>
+<br><tt>&nbsp; CUT0D.C&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 改行コードを0x0Aにするフィルタプログラム(qkcやnkf、ackの使用</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+できる環境であればまず必要ないものです）</tt>
+<p>ソースファイルのコンパイルはお決まりのパターン、XC2.0以上の環境で
+<p><tt>&nbsp; A:>cc /y MKBDF16K.C</tt>
+<br><tt>&nbsp; A:>cc /y MKBDF16R.C</tt>
+<p><tt>&nbsp; A:>cc BDFBOLD.C</tt>
+<br><tt>&nbsp; A:>cc CUT0D.C</tt>
+<br>&nbsp;
+<p>としてコンパイルしてください。
+<p>フォントデータの吸い出し部にIOCS関数を使っているだけなので、GCCでのコンパイルもライブラリの指定さえきちんとすればコンパイル可能です。'
+-liocs 'の指定を忘れずに。
+<br>&nbsp;
+<p>UNIXでも利用可能なプログラムもあります。
+<p><tt>&nbsp; % cc -o bdfbold bdfbold.c</tt>
+<br><tt>&nbsp; % cc -o cut0d cut0d.c</tt>
+<p>として実行してください。
+<p>
+<hr WIDTH="100%">
+<br>&nbsp;
+<p><b><font size=+1>あとがき</font></b>
+<p>ROMフォントはやはりSHARPの著作物ということで、SHARPの許可をもらわないと吸い出したフォントは配布しないほうがいいですよね。ですから今回はプログラムのみでフォントファイルはありません。ということは実機が必要ということです。この部分は「実機が手元にある＝X68kのROMフォントに対して愛着がある」と勝手に判断しています。(EX68でのエミュレーションは理論上可能なのですが未確認です。HDイメージからどうやってWindows上のファイルに落とすんでしょうか？)
+<p>外字はjis-212に準処しているかどうかわからないので、今の所保留にしてあります。外字フォントも登録するとハドソンの蜂マークなんかも表示出来るように・・・なることでしょう。もちろん自前で作成しましょうね。
+<p>24ドットフォントについては、まずよほど大きい画面で使っている人しか使わないだろうということと、差し替えてもそれほど違いの無い字体ということで16ドットフォントしか作りませんでした。圧縮してフロッピーディスクに収まるかどうかも怪しいですし（16ドットフォントの圧縮率からして入らないことはないでしょう)。
+<br>&nbsp;
+<p>どうしてファイルサイズが大きくなることがわかっていながら、リダイレクトを使うような、すなわち標準入出力を使用するプログラムを組むかということについては、
+<br>&nbsp;
+<ul>
+<li>
+なるべく汎用性を持たせるように、ということからです。事実、mkbdf16k.cなどはPCー98x1でもROMフォントデータ吸い出し部をPC-98x1専用のものに変更すること＋αで対応が可能なはずですし。その場合のROMフォントはPC-98x1のものですけどね(intの問題をクリアすれば、の話）。</li>
+
+<li>
+なるべく無造作にファイルをオープンして操作しないように気を使ったことからでしょうか。fprintf関数の使用を嫌った部分もあります。</li>
+
+<li>
+この頃、FreeBSD上での作業が多くなっていることからでしょうか。今回の例ではsed（ストリームエディタ）まで使っていますし。そういう環境に慣れてきているのでしょうね。</li>
+
+<li>
+かなり意地の部分もあったかもしれません。"GNU is Not Unix!!"と叫びながらプログラムを組んだとか組まないとか。</li>
+</ul>
+
+<p><br>などの点からでしょうね。その割にソースが汚いという人は誰ですか！。動きゃいいのよ、動きゃってヤツです。どうせ１度しか起動されないんですから:-)。
+<br>&nbsp;
+<p>
+<hr WIDTH="100%">
+<br>&nbsp;
+<p><b><font size=+1>あとがきのあとがき(X11 &amp; UNIX X68k化計画)</font></b>
+<p>現在、twmの配色をグレー系に統一して「Ko-windowみたい」な環境を作っています。あくまで「みたい」な感じの画面に仕上がっています。これに対して少し配色をかえて、vsみたいな感じの画面に仕上げることも可能です。確かWWW上のどこかでSX-windowやKo-windowに似せたウィンドウマネージャを見たような気もします。それがWindows95用であったかX-window用であったかの記憶が定かではありませんが、そういうものがあればさらにX68k化出来るでしょう。アイコンの類はpixmap等のパターンエディタでしこしこと描いてください。
+<p>また、fvwm95やqvwm等のウィンドウマネージャを使ってX-Window上であたかもWindowsとEX68(Human68kの画面だけだけど)が動いているようなスクリーンも作り上げることができます。あとはNexTで動いているように見せかけたり、「MacでもEX68が動くぞ、スクリーンショットもほらこの通り。」っていう悪質なデマが流せたり（ってホントにやらないでくださいね）ということが実現可能です。これには800x600以上の画面が必要ですけど。
+<p><tt>&nbsp; % kterm -geometry 96x32 -km euc -fk peke16k -fn peke16r -fr
+peke16r \</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; -fg white -bg black -name EX68 &amp;</tt>
+<br>それではさいなら。
+<br>
+<hr WIDTH="100%">
+<table COLS=1 WIDTH="100%" BGCOLOR="#FFCCCC" >
+<caption>証拠写真はこちら。</caption>
+
+<tr>
+<td>
+<center><a href="SCR_SHOT.PNG">X11R6+Kterm+X68kFontスクリーンショット[LINK]</a>
+<br><a href="MEADOW01.PNG">Meadowのスクリーンショット[LINK]</a></center>
+</td>
+</tr>
+</table>
+
+<hr WIDTH="100%">
+<p><b><font size=+1>使用（テスト)環境</font></b>
+<p>&nbsp; X68000 EXPERT2 HD (CZ-613C-BK) , Human68k ver 3.0
+<br>&nbsp; NEC PC-9801 RA21+IBM486SX3, FreeBSD(98)2.2.2-R /XFree86 3.2
+(XF98_TGUI)
+<br>&nbsp; COMPAQ CONTURA400C , Slackware3.5 + PJE-0.15cm
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+XFree86 3.3.3.1 (XF86_SVGA), kon2
+<br>&nbsp; HITACHI FLORA3010CT , FreeBSD 2.2.8
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+XFree86 3.3.3.1 (XF86_SVGA), kon2
+<br>&nbsp; NEC PC-9821 Cx2 , Windows95/NEC / Meadow 1.0
+<br>&nbsp;
+<p>&nbsp; XC ver2.1 -newkit-
+<p>　・一応全てのソースについてX68k上においてGCCでもコンパイル可能です。
+<br>　・一部のソースはFreeBSD上のgccでもコンパイル、動作確認をしています。
+<p>参考資料：
+<p>&nbsp; XC ver2.1 -newkit- の各マニュアル
+<br>&nbsp; X68000 EXPERT 取扱説明書&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+(SHARP)
+<p>&nbsp; XFree86 3.2 document
+<br>&nbsp; XFree86 online manual
+<br>&nbsp; kon2のドキュメント、Cソース
+<p>&nbsp; jiskan16.bdf
+<p>&nbsp; UNIX USER&nbsp; (SOFTBANK)
+<br>&nbsp; ここまでできるFreeBSDパワーガイド (秀和システム)
+<br>
+<hr WIDTH="100%">
+<br>&nbsp;&nbsp;
+<div ALIGN=right><table COLS=1 WIDTH="100%" BACKGROUND="X68LOGO1.PNG" >
+<tr>
+<td>
+<div align=right><b><font color="#000000">1999.09 by Tetsuo.Mitsuda (加筆修正)</font></b>
+<br><b><font color="#000000">1998.10 by Tetsuo.Mitsuda</font></b>
+<br><b><font color="#000000">作成者：三津田 哲雄</font></b>
+<br><b><font color="#000000">メールアドレス：なし</font></b>
+<br><b><font color="#000000">最終更新日：1999.09.08</font></b>
+<br><b><font color="#000000">ターゲットOS：Human68k/FreeBSD/Linux/Windows95</font></b></div>
+</td>
+</tr>
+</table></div>
+(eof)
+<br>&nbsp;
+</body>
+</html>

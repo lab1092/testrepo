@@ -1,0 +1,134 @@
+/*
+* ROM to BDF fontfile (KANJI) / Original Source File
+* 1998.10  Tetsuo.Mitsuda
+* Compile:
+* (X68GCC) : gcc -liocs -o mkbdf16k.x mkbdf16k.c
+*  (X68XC) : cc -y mkbdf16k.c
+*
+* Usage:
+*   mkbdf16k > bdfkanji.bdf
+*/
+#include <stdio.h>
+#include <iocslib.h>
+
+#define	KCG_BUF		32
+
+
+
+void get_font16( int, unsigned char* );
+void scan_code(int startcode, int endcode);
+void code_inc( int* );
+void print_header(void);
+
+
+void main()
+{
+
+	print_header();
+
+	scan_code(0x2121, 0x222e);
+	scan_code(0x223a, 0x2241);
+	scan_code(0x224a, 0x2250);
+	scan_code(0x225c, 0x226a);
+	scan_code(0x2272, 0x2279);
+	scan_code(0x227e, 0x227e);
+	scan_code(0x2330, 0x2339);
+	scan_code(0x2341, 0x235a);
+	scan_code(0x2361, 0x237a);
+	scan_code(0x2421, 0x2473);
+	scan_code(0x2521, 0x2576);
+	scan_code(0x2621, 0x2638);
+	scan_code(0x2641, 0x2658);
+	scan_code(0x2721, 0x2741);
+	scan_code(0x2751, 0x2771);
+	scan_code(0x2821, 0x2840);
+	scan_code(0x3021, 0x4f53);
+	scan_code(0x5021, 0x737e);
+	scan_code(0x7421, 0x7424);
+
+	printf("ENDFONT\n");
+
+}
+
+void scan_code(int startcode, int endcode)
+{
+	int i,code;
+	char raster[KCG_BUF+1];
+	int c;
+
+	for (code = startcode; code<=endcode; code_inc( &code ) ){
+		get_font16( code, raster);
+
+		printf( "STARTCHAR %x\n",code);
+        	printf( "ENCODING %5d\n",code);
+        	printf( "SWIDTH 96 0\n");
+        	printf( "DWIDTH 16 0\n");
+        	printf( "BBX 16 16 0 -2\n");
+               	printf( "BITMAP\n");
+
+		for (i=0; i< KCG_BUF; i+=2){
+			c =( (raster[i] & 0xff) << 8 ) + ( raster [i+1] & 0xff);
+			printf("%04x\n", c);
+		}
+		printf( "ENDCHAR\n");
+		
+	}
+}
+
+void get_font16( int char_code, unsigned char* raster )
+{
+	char	temp_buf[KCG_BUF+4];
+	int	i;
+
+	FNTGET(8, char_code ,temp_buf);
+
+
+	for( i=0 ; i<32 ;i++ ){
+		*raster++ = temp_buf[i+4];
+	}
+
+}
+
+void code_inc(int *i)
+{
+	if ( (*i & 0xff) == 0x7e ){
+		*i = (*i & 0xff00) + 0x121;
+	}else{
+		(*i)++;
+	}
+}
+
+void print_header(){
+
+	printf("STARTFONT 2.1\n"); 
+	printf("COMMENT 16x16 kanji font\n"); 
+	printf("COMMENT from SHARP X680x0 ROMFONT\n"); 
+	printf("FONT -PEKE-Fixed-Medium-R-Normal--16-150-75-75");
+	printf("-C-160-JISX0208.1983-0\n"); 
+	printf("SIZE 6 78 78\n"); 
+	printf("FONTBOUNDINGBOX 16 16 0 2\n"); 
+	printf("STARTPROPERTIES 19\n"); 
+	printf("FONT_ASCENT 14\n"); 
+	printf("FONT_DESCENT 2\n"); 
+	printf("DEFAULT_CHAR 8481\n"); 
+	printf("COPYRIGHT \"from SHARP X680x0 ROMFONT\"\n"); 
+	printf("FONTNAME_REGISTRY \"\"\n"); 
+	printf("FOUNDRY \"PEKE\"\n"); 
+	printf("FAMILY_NAME \"Fixed\"\n"); 
+	printf("WEIGHT_NAME \"Medium\"\n"); 
+	printf("SLANT \"R\"\n"); 
+	printf("SETWIDTH_NAME \"Normal\"\n"); 
+	printf("ADD_STYLE_NAME \"\"\n"); 
+	printf("PIXEL_SIZE 16\n"); 
+	printf("POINT_SIZE 150\n"); 
+	printf("RESOLUTION_X 75\n"); 
+	printf("RESOLUTION_Y 75\n"); 
+	printf("SPACING \"C\"\n"); 
+	printf("AVERAGE_WIDTH 160\n"); 
+	printf("CHARSET_REGISTRY \"JISX0208.1983\"\n"); 
+	printf("CHARSET_ENCODING \"0\"\n"); 
+	printf("ENDPROPERTIES\n"); 
+	printf("CHARS 6877\n"); 
+
+}
+

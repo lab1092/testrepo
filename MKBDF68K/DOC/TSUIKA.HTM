@@ -1,0 +1,476 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+   <meta name="GENERATOR" content="Mozilla/4.75 [ja] (Win98; U) [Netscape]">
+   <meta name="Author" content="mitsdua">
+   <title>Tsuika</title>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000EE" vlink="#551A8B" alink="#FF0000">
+<a NAME="top"></a>[2001.04.01付け、追加事項]
+<br>
+<hr WIDTH="100%">
+<center><b><font size=+2>Oh!X　2001春号掲載時点からの追加事項</font></b>
+<p>2001.04.01:三津田 哲雄(MITSUDA Tetsuo)</center>
+
+<p><font color="#FF0000">Oh!X 2001春号P.190-194、「X Windowで X68000のROMフォントを表示する(以下MKBDF68kとします)」についての追加事項です。</font>
+<br>
+<hr WIDTH="100%">
+<br><a href="MKBDF68K.HTM">&lt;-本編へ戻る(MKBDF68k.htm)</a>
+<ul>
+<li>
+<a href="#win32">Win32バイナリについて</a><i><font color="#000000">(2001.05.06)</font></i></li>
+
+<li>
+<a href="#doc">ドキュメントも含む「フリー化」について</a></li>
+
+<li>
+<a href="#bdf">BDFフォントファイルについて</a></li>
+
+<li>
+<a href="#unix">PC-UNIXについて</a></li>
+
+<li>
+<a href="#trans">フロッピーディスクでの転送について</a></li>
+
+<li>
+<a href="#x">X-Windowについて</a></li>
+
+<li>
+<a href="#kon">kon2について</a></li>
+
+<li>
+<a href="#meadow">Meadowについて</a></li>
+
+<li>
+<a href="#fnt">X68000のROMフォントとX-Windwoの標準フォントの比較</a></li>
+</ul>
+
+<hr WIDTH="100%">
+<br><i>ここから2001.05.06--</i>
+<br><a NAME="win32"></a>
+<table BORDER=0 WIDTH="100%" BGCOLOR="#99FF99" >
+<tr>
+<td><b><font size=+1>Win32バイナリについて(2001.05.06)</font></b></td>
+</tr>
+</table>
+
+<p>「どーしてもボールド体が作りたいけど、私はX68000とWindows98マシンしか持ってないのよ。」という方のために、WindowsのDOSプロンプト上で動く実行ファイル(Win32バイナリ)
+<ul>
+<li>
+bdfbold.exe</li>
+
+<li>
+cot0d.exe</li>
+</ul>
+を同梱します。動作検証はWindows98SE上で
+<ol>
+<li>
+あらかじめ作成したpeke16k.bdf及びpeke16r.bdfを用意</li>
+
+<li>
+コンパイルしたファイルを使ってボールド体のBDFフォントを作成(下にある「魔法の呪文」)</li>
+
+<li>
+Meadowで表示</li>
+</ol>
+と、ひととおりは行っていますが、信頼性の面で言えばかなり低いといえるでしょう。「コンパイルできる」という目安程度に考えておいてください。
+<p>コンパイルには 「Borland C++ Compiler 5.5 」 を使わせていただきました。このコンパイラはフリーで入手が可能ということです。よくC
+Magazine(ソフトバンクパブリッシング)の付録CD-ROMに収録されているようなので、そちらを購入されて入手するのが手軽でいいのではないかと思います。
+<p>この実行ファイルは以前のバージョンのMS-DOSでは動きません。どうしても動かしたい奇特な方は、これもフリーで出まわっている「LSI-C86
+3.30c試食版」でソースファイルをコンパイルしましょう。フィルタプログラムなので、セグメント境界の問題とは無縁のプログラムですから、正常に動いてくれる…とは限らないところが曲者です。もしかしたら"bdfbold.c"はソースを修正しないと動かないかもしれません…。
+<br>&nbsp;
+<br>&nbsp;
+<center><table BORDER=0 CELLSPACING=0 CELLPADDING=7 COLS=1 WIDTH="80%" BGCOLOR="#FFFFCC" >
+<tr>
+<td><b>魔法の呪文</b>
+<p>"peke16k.bdf"、"peke16r.bdf"、"bdfbold.exe"、"cut0d"の4つのファイルを同じディレクトリに置き、そのディレクトリをカレントディレクトリとして、
+<p>A:> type peke16k.bdf&nbsp; |&nbsp; bdfbold&nbsp; | cut0d&nbsp; peke16kb.bdf
+<br>A:> type peke16r.bdf&nbsp; |&nbsp; bdfbold&nbsp; | cut0d&nbsp; peke16rb.bdf
+<p>と唱えます。</td>
+</tr>
+</table></center>
+
+<p>検証用にSJIS文字コードを並べた<a href="sjischar.txt">sjischar.txt</a>を用意しました。このファイルをMeadowで読み込んで、正常に表示されるかどうかを確認してください。
+<p>この"sjischar.txt"はX68000の文字セットですので、Windowsで使われているフォントの文字セットにある文字が見当たらないというものもいくつかありますが、普通に読み書きするぶんにはほとんど支障はありませんので安心してください。気になる人は、MS-IMEのヘルプから、「漢字コード表」を参照してください。なお、「IBM拡張文字」は当然のことながら表示されません。
+<p>なお、konでは「瑤(JIS:0x7424/SJIS:0xEAA2)」という字の下半分が欠けて表示されます。
+<p><i>--ここまで2001.05.06</i>
+<br>
+<hr WIDTH="100%">
+<br><a NAME="doc"></a>
+<table BORDER=0 WIDTH="100%" BGCOLOR="#99FF99" >
+<tr>
+<td><b><font size=+1>ドキュメントも含む「フリー化」について</font></b></td>
+</tr>
+</table>
+
+<p>2001春号の内容で、ドキュメントがCD-ROMに収録されなかったことに気が付きました。私としては「バイナリ、ソース、およびドキュメント」のすべてをどこかで公開する（またはされる）場合に、「フリー化」するつもりでいました。しかし事情により、どこにも公開していなかったということと、いくつか不安な要素もあり、「バイナリおよびソースをフリーとして扱う」旨しか本文に書かなかったのが収録されなかった理由かと思います(勝手に解釈しました）。しかし、今回Oh!Xで記事として誌面に掲載されたことから、それに関するフォローの意味も込めて、「<b>ドキュメント類すべてを含めて完全にフリー</b>」としたいと思います。
+<blockquote><b>フリー化に関する条件</b>
+<ul>
+<li>
+発生する権利そのものは放棄しませんが、このプログラムについての苦情は受け付けません。</li>
+
+<li>
+MKBDF68kに含まれるデータ内容は自由に転載、改造等も許可することとし、その際
+の連絡は不要とします。</li>
+
+<li>
+このプログラムによって生成されるX68000のROMフォントおよびそれを加工したデータについての権利はシャープにあります。個人で楽しむだけにとどめておいてください。</li>
+</ul>
+</blockquote>
+この条件の適用範囲は「mkbdf68k.lzhと、それを解凍して得られるファイル」とします。
+<br>&nbsp;
+<p>はじめからこのように宣言していればOh!XのCD-ROMにドキュメントも含めた形式で収録されたことでしょうから、なんだか申し訳無いような感じです。どうしてもMKBDF68kを使いたいという人がいるかどうかはわかりませんが、このドキュメントが役に立てば幸いです。
+<p>CD-ROM、DOCディレクトリだけあってドキュメントが収録されていないのはどうしてなんでしょう、私にも本当のところはわかりません。
+<br>
+<hr WIDTH="100%">
+<br><a NAME="bdf"></a>
+<table BORDER=0 COLS=1 WIDTH="100%" BGCOLOR="#99FF99" >
+<tr>
+<td><b><font size=+1>BDFフォントファイルについて</font></b></td>
+</tr>
+</table>
+
+<p>mkbdf68k.x および mkbdf68r.x で生成されるBDFフォントファイルについてのお話です。
+<ul>
+<li>
+生成されたBDFフォントファイルは個人使用以外には使わないでください。生成されたデータはシャープに権利があるものと思ってください。また、BDFフォントを使用したことによるいかなる損害、不利益についての責任は負いかねます。</li>
+
+<li>
+将来、シャープがX68000のROMフォントを「フリー」とし、BDFファイルをリリースした、という場合には、そのリリースされたBDFフォントファイルを使うようにしてください。この
+MKBDF68k はあくまで「個人使用」のレベルになんとか耐えられるように作られたものですので、BDFファイル(特にヘッダ部分のCopyright表示など)が完全ではありません。</li>
+</ul>
+
+<table BORDER=0 COLS=1 WIDTH="100%" BGCOLOR="#FFFFCC" >
+<tr>
+<td>
+<br><b>BDFフォントファイルの検証</b>
+<p>「どうしてもBDFフォントが読み込めない」という場合にはBDFフォントファイルのデータが壊れている可能性があります。通常、ファイルが壊れているかどうかを簡単に検証する方法は、ファイルサイズやチェックサムを正しいデータのものと比較するのが正当なやり方なのでしょうが、MKBDF68kの配布にはそのようなデータが一切ありません。このことは
+<ul>
+<li>
+MKBDF68kが出力するBDFフォントデータが完全なものではない</li>
+
+<li>
+プログラムの仕様上</li>
+</ul>
+といった都合によるものです。
+<p>まあ、同じプログラムを同じ環境で走らせるのですから、よっぽどのことがない限りmkbdf68k.xやmkbdf68r.xが壊れたデータを吐き出すことはありえません。データが壊れるとすればデータをX68000からPC-UNIXマシンへフロッピーディスクでやり取りする場合などでしょう。案外フロッピーディスクはデータを安全に保ってはくれないメディアです。可能な限り、BDFフォントファイルは圧縮するなどして転送しましょう。
+<br>&nbsp;
+<table BORDER COLS=1 WIDTH="100%" BGCOLOR="#99FF99" >
+<tr>
+<td><b>簡易検証(PC-UNIX上で)</b>
+<p>この方法では、ファイルが最後まで書かれているかを簡易検証するものです。"tail
+peke16k.bdf"として最後の行に"ENDFONT"があることを確認するだけでは不安な場合にお使いください。
+<blockquote>head -n 30 peke16k.bdf | grep CHARS
+<br>cat peke16k.bdf | wc STARTCHAR</blockquote>
+この２つのコマンドで出力される数値が同じであれば(おそらく)正常に書きこめています。</td>
+</tr>
+</table>
+
+<p>&nbsp;</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%">
+<br><a NAME="trans"></a>
+<table BORDER=0 COLS=1 WIDTH="100%" BGCOLOR="#99FF99" >
+<tr>
+<td><b><font size=+1>フロッピーディスクでの転送について</font></b></td>
+</tr>
+</table>
+
+<p>実はこのプロセスが一番の難関であり、頭を悩ませるところです。X68000XVI
+Compactシリーズのように3.5"FDDを搭載しているマシンでもフォーマットの点で大きな障害があるのに、さらに無印やACE、EXPERT等の5"FDDユーザであればさらにその難易度は上がります。SCSIでもSASIでもHDDを搭載しているほうが有利といえば有利ではあるのですが、「フロッピーディスクを使ったデータ転送」をしなければならないのであればこの問題にぶつかります。
+<br>&nbsp;
+<p><u>X68000 XVI Compact のHDD搭載モデルなどで、FDDに2DD対応の改造がされている</u>のであれば、「世界共通の」2DDフォーマットを使えばいいのではないかと思います。BDFファイルは単純なテキストファイルですので、"peke16k.bdf"を圧縮すれば相当小さなファイル(200～300kb?)になります。そうすればPC/AT機側が1200kbや1232kbのメディアを読めない場合でも転送が可能だと思います。
+<p>X680x0のSCSI搭載機種では、MOをつなぐのがもっとも簡単な方法だということをお教えしておきましょう。もちろんDOS/V機側にもMOをつなぐ必要がありますよ。この際、メディアの記憶容量に注意する必要があるかもしれません。両方のMOドライブが230MBメディアに対応していればすんなりと事が運ぶと思いますが、はたして。
+<p>私の場合は、X68000 EXPERT 2(もちろん5インチ機種)に加え、PC-9801 RA (5インチ機種)と3.5"外付けFDD(3モード対応)という「強い味方」がありましたからそのあたりは簡単にクリアー出来ました。しかし、SUPER以前のX68000ユーザはそういう特殊な環境にでもいない限り、5"FDDから3.5"FDDへのメディアコンバートに苦慮するのは目に見えています。中古でPC-98x1を購入出来る方はそうなさってください。私は止めません。
+<p>他に方策は無いのか、無いわけではありません。それはHuman68kのシリアルポートと他PCをRS-232Cケーブルでつなぎ、通信ソフトを使ってデータ転送する方法です。「パソコン通信」経験者であれば気が付かないということはないでしょうが、スピードがいかんせん遅い上に、データの取りこぼしをしやすいこの方法、設定を間違えると何度やってもデータ化けという悲惨な結果しか待っていないので「現実的ではない」のです。それでもやってみるのであれば、私から助言を。
+<blockquote>RS-232Cケーブルはクロスケーブルを使いましょう</blockquote>
+そういえばOh!Xで何かありましたね、RS-232Cを使ったデータ転送に関する記事が。あれはいったいどうなったのやら。
+<p>そうそう、X68000のコンソール出力をシリアルにするという手もありましたね。
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER=0 CELLSPACING=0 CELLPADDING=7 COLS=1 WIDTH="100%" BGCOLOR="#FFFFCC" >
+<tr>
+<td><b>DOS版FD.EXEのディスク名書き換えについて(動作確認:PC-98用)</b>
+<p>DOS版FD.EXEには強力な機能があります。Human68kで小文字のファイル名を使ってしまったディスクでもMS-DOSでアクセス可能にしてしまう機能があります。PC-98版のFDしか確認していませんので注意してください。以下の操作を行う場合にはWindowsのDOSプロンプトからではなく、クリーンなDOS環境で行ってください。
+<p>Human68kで英小文字をつけたファイルはMS-DOSで読み取り不可能になるというのは知られていますが、これをアクセス可能にする方法です。PC-9801系のマシンを想定します。
+<br>&nbsp;
+<ol>
+<li>
+まずはX68000で小文字を使用したファイル名をつけてしまったファイルの上にカーソルを合わせます。</li>
+
+<li>
+そこで"Rename"コマンドを使います。このとき、名前は変えないでそのままリターンキーを押します。</li>
+
+<li>
+すると8+3文字になっているものの、ファイルはPC-9801上でアクセスできるようになります。</li>
+</ol>
+ほぼこのようなやり方でアクセス出来るようになります。</td>
+</tr>
+</table>
+
+<p>何故EX68に触れないか?。それは「私が使ったこと無い」というだけのことです。それだけです。EX68でこの行為を行うのを奨励すればX68000本体の存在価値を下げてしまうとか、そんなむつかしいことはまったく考えていません。
+<p>
+<hr WIDTH="100%">
+<br><a NAME="unix"></a>
+<table BORDER=0 COLS=1 WIDTH="100%" BGCOLOR="#99FF99" >
+<tr>
+<td><b><font size=+1>PC-UNIXについて</font></b></td>
+</tr>
+</table>
+
+<p>MKBDF68kに関するドキュメントの第2版を書いたのが1999.09(オリジナルは1998.09)というのですから、その当時とはPC-UNIXを取り巻く環境というものがまったく違うこともあり、いろいろなことで食い違う点がでてくるかもしれません。
+<p>ただし、基本的なことは変わらないと思うので
+<blockquote>man bdftopcf</blockquote>
+等としてマニュアルページを読んで対処してください。
+<p>「日本語パッケージ」等と呼ばれるプログラムを導入している、もしくは日本語ディストリビューションをインストールしている方は「漢字コードコンバータ」という種類のプログラムを探してください。nkfが有名ですが、その使い方をマスターしておくと役に立つかもしれません。
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER=0 COLS=1 WIDTH="100%" BGCOLOR="#FFFFCC" >
+<tr>
+<td><b>CUT0D.Cの使用について</b>
+<p>nkf等のプログラムで"CR+LF"から"CR"への改行コードの変換も出来ますが、それが無い場合には自分でどうにかするほかありません。CUT0D.CはUNIX上のgccでもコンパイル可能であり、改行コードの簡易変換をするためのプログラムです。簡単なプログラムなので多分gccでなくてもコンパイルできるとは思いますが。カレントディレクトリに"cut0d.c"を置き、コンパイルします。
+<blockquote>cc -o cut0d cut0d.c</blockquote>
+これで"cut0d"という名前でプログラムがカレントディレクトリに作成されました。peke16k.bdfおよびpeke16r.bdfもカレントディレクトリにコピーされているとした場合、
+<blockquote>mv peke16k.bdf peke16k.bdf.org
+<br>mv peke16r.bdf peke16r.bdf.org
+<br>cat peke16k.bdf.org | ./cut0d peke16k.bdf
+<br>cat peke16r.bdf.org | ./cut0d peke16r.bdf</blockquote>
+とします。今までの内容がわからない人はそもそもX68kのROMフォントに愛着を持つかどうか怪しいので、これに関する詳しい説明は無しです。</td>
+</tr>
+</table>
+
+<br>&nbsp;
+<table BORDER=0 WIDTH="100%" BGCOLOR="#FFFFCC" >
+<tr>
+<td><b>MS-DOSフォーマットされたフロッピーディスクのマウントについて</b>
+<p>PC-UNIXでフロッピーディスクをマウントする場合、「PC-98フォーマット」と言われる、1232kB(2HD/DOS8)フォーマットのマウントが出来るのは
+<blockquote>FreeBSD(98)2.x</blockquote>
+くらいしか心当たりがありません。FreeBSD(98)も3.0以上である場合、サポートされないと記憶しています。1200kB(2HC)フォーマットであればドライブが対応していれば他のPC-UNIXでも認識が可能であると思います。
+<blockquote>mount -t msdos /dev/fd0 /mnt
+<br>mount -t vfat&nbsp;&nbsp;&nbsp; /dev/fd0 /mnt</blockquote>
+FreeBSDでは"/dev/fd0.1232"というように、デバイスファイルに容量を指定する必要があるかもしれません。実際のメディアと違う容量を指定するしてはいけません。
+<p>マウントしなくても、フロッピーディスクを扱えるツール、Mtoolsがあるならそちらを使っていただいてもかまいません。しかしこれもDOSフォーマットしか受け付けないのでHuman68kで作成されたフロッピーディスクを直接使用する場合には正常に動作しない可能性があります。
+<p>TwentyOne.xで拡張されたHuman68kではこの限りではありませんが、Human68k単体の場合と動作が異なるためにここでは想定していません。
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" BGCOLOR="#FFFFFF" >
+<caption><b>ファイル名を"VeryLongName.htm"としたときの振る舞い</b></caption>
+
+<tr BGCOLOR="#99FF99">
+<td>&nbsp;</td>
+
+<td>
+<center>書き込まれたファイル名</center>
+</td>
+
+<td>
+<center>Human68k</center>
+</td>
+
+<td>
+<center>MS-DOS</center>
+</td>
+
+<td>
+<center>VFAT</center>
+</td>
+
+<td>
+<center>Mtools(VFAT対応)</center>
+</td>
+</tr>
+
+<tr>
+<td BGCOLOR="#FFCC99">
+<center>Human68k
+<br>書き込み</center>
+</td>
+
+<td>VeryLongName.htm</td>
+
+<td>VeryLongName.htm</td>
+
+<td>VERYLONG.HTM
+<br>(データアクセス不可)</td>
+
+<td>VERYLONG.HTM
+<br>(データアクセス不可)</td>
+
+<td>アクセス不可??</td>
+</tr>
+
+<tr>
+<td BGCOLOR="#FFCC99">
+<center>MS-DOS
+<br>書き込み</center>
+</td>
+
+<td>VREYLONG.HTM
+<br>もしくはエラー</td>
+
+<td>VERYLONG.HTM</td>
+
+<td>VERYLONG.HTM</td>
+
+<td>VERYLONG.HTM</td>
+
+<td>VERYLONG.HTM</td>
+</tr>
+
+<tr>
+<td BGCOLOR="#FFCC99">
+<center>VFAT
+<br>書き込み</center>
+</td>
+
+<td>VERYLO~1.HTM
+<br>VeryLongName.htm</td>
+
+<td>VERYLO~1.HTM</td>
+
+<td>VERYLO~1.HTM</td>
+
+<td>VeryLongName.htm</td>
+
+<td>VeryLongName.htm</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%">
+<br><a NAME="x"></a>
+<table BORDER=0 COLS=1 WIDTH="100%" BGCOLOR="#99FF99" >
+<tr>
+<td><b><font size=+1>X Windowについて</font></b></td>
+</tr>
+</table>
+
+<p>X Window、特にXFree86では、1999年の段階からかなりの変化がありました。XFree86は4.0系のリリースがすでに始まっていることやベクトルフォント等をXのフォントとして「当たり前のように」扱える環境を構築できるようになりました。これにより、またMKBDF68kが「要らないもの」になっていくようです。
+<p>X Windowでフォントを使う場合、BDFからPCFフォントファイルの形式に変換してgzipもしくはcompressで圧縮するのですが、Linuxだからgzipを使うとか、FreeBSDだからcompreesを使うということはないようです。最近の版のXFree86ドキュメントではgzipを使うように書かれています。
+<blockquote>cat peke16k.bdf | bdftopcf | gzip >peke16k.pcf.gz</blockquote>
+
+<p><br><u>BDFフォントの改行コードやファイル終端コードが問題となる場合には適切に変換や編集をする必要があります。</u>
+<p>本文中ではX Windowのウィンドウマネージャや統合デスクトップのことには詳しく触れていませんが、私が統合デスクトップなどをストレスなく使える環境にはないので、使う気が起きないということで確認作業をしていないだけです。Enlightment等の「デスクトップテーマ」が使用可能なウィンドウマネージャで、どなたかがSX-WindowやKo-Window風のテーマを作成していることであろうと淡い期待を寄せています。GnomeやKDEについても同様です。
+<p>NetBSD X68kで「X Window使っているの時の16ドットフォントがX68000のものでないのはどうして?」という方はゼヒこのMKBDF68ｋをお試しになって下さい。幸せになれるかもしれません。とはいっても動作確認はしていません。
+<p>
+<hr WIDTH="100%">
+<br><a NAME="kon"></a>
+<table BORDER=0 COLS=1 WIDTH="100%" BGCOLOR="#99FF99" >
+<tr>
+<td><b><font size=+1>Konについて</font></b></td>
+</tr>
+</table>
+
+<p>「konとノートパソコンの相性はあまりよくないようです」と書いている部分の表現が適切なものではありませんでした。正確には
+<blockquote><font color="#000000">konとノートパソコンの一部機種の組み合わせで問題が発生することもあります。</font></blockquote>
+と書くべきでした。kon自体が悪さをするというわけではなく、PCの機種によるわずかな非互換性やその他の問題もかかわっていることが多く、konだけをひきあいに出したのはあまりよくなかったようです。kon作者の方および関係している皆様にご迷惑をおかけしたことをここにお詫びします。
+<p>konには設定ファイルを書くための作法があります。参考までに私のPCの設定を"<a href="KONCFG.TXT">koncfg.txt</a>"という名前で収録しました。このテキストは改行コードを"CR+LF"にしてあるので、実際にこのファイルをそのまま'kon.cfg'等として使う場合は改行コードを"CR"に変換するようにしてください。
+<p>フレームバッファコンソールで動作する漢字コンソール(konとは別のものらしい)が存在するということらしいですが、その確認は取っていません。
+<br>
+<hr WIDTH="100%">
+<br><a NAME="meadow"></a>
+<table BORDER=0 COLS=1 WIDTH="100%" BGCOLOR="#99FF99" >
+<tr>
+<td><b><font size=+1>Meadowについて</font></b></td>
+</tr>
+</table>
+
+<p>Meadowについては、2001.04.01現在でもバージョン1.00しか所有していません。もう1.00がリリースされて長くなるのでバージョンアップされている可能性が高いのですが、私の環境ではこれで必要十分であるのでデータ収集などはしていません。
+<p>もしMeadowのバージョンが上がっていた場合、この方法が適用出来ない可能性もあります。個々で対応してください。
+<p>私の環境で使っているMeadowの設定ファイルを"<a href="_EMACS.TXT">_emacs.txt</a>"という名前で収録しました。参考にしてください。
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER=0 COLS=1 WIDTH="100%" BGCOLOR="#FFFFCC" >
+<tr>
+<td><b>".emacs"というファイル名にならない?</b>
+<p>Windows上で"_emacs.txt"というファイル名を".emacs"に改名したくても、".emacs"と入力すると
+<blockquote>名前を入力してください</blockquote>
+と言われて結局ファイル名を変更できないことがあることがわかりました。解決する方法は以下のとおりです。
+<ol>
+<li>
+まずは「メモ帳」などで"_emacs.txt"を開きます。</li>
+
+<li>
+内容には手を付けず、「名前を付けて保存」を選びます。</li>
+
+<li>
+保存するファイル名を".emacs"として「保存」します。</li>
+</ol>
+とても簡単なことですが、重要です。恥ずかしながら、21世紀になってこういったトラブルを初めて体験しました。</td>
+</tr>
+</table>
+
+<p>
+<hr WIDTH="100%">
+<br><a NAME="fnt"></a>
+<table BORDER=0 COLS=1 WIDTH="100%" BGCOLOR="#99FF99" >
+<tr>
+<td><b><font size=+1>X68000のROMフォントとX-Windowの標準フォントの比較</font></b></td>
+</tr>
+</table>
+
+<p>比較サンプルです。同じ16ドットフォントですが、違いがはっきりとわかります。
+<br>&nbsp;
+<table BORDER COLS=2 WIDTH="100%" >
+<caption>X68000のROMフォントとX-Windowの標準フォントの比較</caption>
+
+<tr BGCOLOR="#CCFFFF">
+<td>
+<center>X68000のROMフォント(peke16k)</center>
+</td>
+
+<td>
+<center>X-Windowの標準フォント(k16)</center>
+</td>
+</tr>
+
+<tr BGCOLOR="#FFFFCC">
+<td>
+<center><img SRC="PEKE16K.PNG" BORDER=0 height=73 width=258></center>
+</td>
+
+<td>
+<center><img SRC="KANJI16.PNG" BORDER=0 height=79 width=265></center>
+</td>
+</tr>
+</table>
+
+<br>&nbsp;
+<br>&nbsp;
+<table BORDER WIDTH="100%" BGCOLOR="#FFFFCC" >
+<caption>Meadow-1.00での見え方</caption>
+
+<tr>
+<td BGCOLOR="#CCFFFF">X68000のROMフォント</td>
+
+<td><img SRC="MEADOW1.PNG" height=446 width=664></td>
+</tr>
+
+<tr>
+<td BGCOLOR="#CCFFFF">Meadowの標準フォント</td>
+
+<td><img SRC="MEADOW2.PNG" height=421 width=664></td>
+</tr>
+</table>
+
+<br>&nbsp;
+<p>
+<hr WIDTH="100%">
+<br>&nbsp;
+<br>&nbsp;
+<div align=right>以上</div>
+
+<hr WIDTH="100%">
+<div align=right><a href="#top">ファイルの先頭へ</a></div>
+
+<hr WIDTH="100%">
+<br>&nbsp;
+</body>
+</html>

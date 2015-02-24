@@ -1,0 +1,7 @@
+BDFBOLD.C      ボールド体作成プログラム
+BDFBOLD.TGZ    ボールド体作成プログラム(UNIX)
+CUT0D.C        '0x0D'フィルタプログラム
+CUT0D.TGZ      '0x0D'フィルタプログラム(UNIX)
+MKBDF16K.ORG   全角フォント吸出しプログラム(Original)
+MKBDF16K.C     全角フォント吸出しプログラム
+MKBDF16R.C     半角フォント吸出しプログラム

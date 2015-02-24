@@ -1,0 +1,6 @@
+ˆÈ‰º‚Ì2s‚ğŠY“–‚·‚éfonts.alias‚É‰Á‚¦‚Ä‚­‚¾‚³‚¢B
+
+
+peke16r -peke-fixed-medium-r-normal--16-150-75-75-c-80-jisx0201.1976-0
+peke16k -peke-fixed-medium-r-normal--16-150-75-75-c-160-jisx0208.1983-0
+
